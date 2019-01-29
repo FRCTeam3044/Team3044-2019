@@ -9,7 +9,6 @@ package frc.reference;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
@@ -24,10 +23,6 @@ public class Hardware {
     WPI_TalonSRX rightFrontDrive;
     WPI_TalonSRX leftBackDrive;
     WPI_TalonSRX rightBackDrive;
-
-    // Sets groups for drive talons to later be used in the WPI tank drive.
-    SpeedControllerGroup m_left;
-    SpeedControllerGroup m_right;
 
     // Used to call the provided tank drive.
     public DifferentialDrive myDrive;
@@ -46,15 +41,12 @@ public class Hardware {
         rightBackDrive = new WPI_TalonSRX(3);
 
         // Sets the back motors to follow the front motors.
-        // leftBackDrive.follow(leftFrontDrive);
-        // rightBackDrive.follow(rightFrontDrive);
-
-        m_left = new SpeedControllerGroup(leftFrontDrive, leftBackDrive);
-        m_right = new SpeedControllerGroup(rightFrontDrive, rightBackDrive);
+        leftBackDrive.follow(leftFrontDrive);
+        rightBackDrive.follow(rightFrontDrive);
 
         // Uses front talons to define motors used in WPI tank drive, the back
         // motors move because of the follower.
-        myDrive = new DifferentialDrive(m_left, m_right);
+        myDrive = new DifferentialDrive(leftFrontDrive, rightFrontDrive);
 
     }
 }

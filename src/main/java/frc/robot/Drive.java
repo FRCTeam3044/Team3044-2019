@@ -16,15 +16,27 @@ import frc.reference.Hardware;
  */
 public class Drive {
     DifferentialDrive myDrive;
-    Joystick first; //Not a good name
+    Joystick first; // Not a good name
 
-    public void DriveInit(){
+    public void DriveInit() {
         myDrive = Hardware.getInstance().myDrive;
-
-       first = new Joystick(0);
+        first = new Joystick(0);
     }
 
-    public void DrivePeriodic(){
-        myDrive.tankDrive(first.getRawAxis(1), first.getRawAxis(2), true); //These raw axis are wrong
+    public void DrivePeriodic() {
+        driveTheBot(first.getRawAxis(1), first.getRawAxis(5)); // These raw axis are possibly correct
+    }
+
+    /**
+     * Tank drive method that can be called anywhere. It calls upon the
+     * differential drive platform.
+     * 
+     * @param leftInput  The robot left side's speed along the X axis [-1.0..1.0].
+     *                   Forward is positive.
+     * @param rightInput The robot right side's speed along the X axis [-1.0..1.0].
+     *                   Forward is positive.
+     */
+    public void driveTheBot(double leftInput, double rightInput) {
+        myDrive.tankDrive(leftInput, rightInput, true);
     }
 }
