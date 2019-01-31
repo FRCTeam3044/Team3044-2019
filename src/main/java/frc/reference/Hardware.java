@@ -7,6 +7,7 @@
 
 package frc.reference;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -26,6 +27,18 @@ public class Hardware {
 
     // Used to call the provided tank drive.
     public DifferentialDrive myDrive;
+
+    // These may need to be changed from TalonSRX to WPI_TalonSRX
+    // Intake
+    public TalonSRX intakeArm1;
+    public TalonSRX intakeArm2;
+    public TalonSRX intakeWrist;
+    public TalonSRX intakeWheels;
+
+    // Climb
+    public TalonSRX climbArm1;
+    public TalonSRX climbArm2;
+    public TalonSRX climbWheels;
 
     public static Hardware getInstance() {
         if (instance == null) {
@@ -47,6 +60,18 @@ public class Hardware {
         // Uses front talons to define motors used in WPI tank drive, the back
         // motors move because of the follower.
         myDrive = new DifferentialDrive(leftFrontDrive, rightFrontDrive);
+
+        //Need to get actual CAN ID's for these
+        //Intake
+        intakeArm1 = new TalonSRX(-1);
+        intakeArm2 = new TalonSRX(-1);
+        intakeWrist = new TalonSRX(-1);
+        intakeWheels = new TalonSRX(-1);
+
+        // Climb
+        climbArm1 = new TalonSRX(-1);
+        climbArm2 = new TalonSRX(-1);
+        climbWheels = new TalonSRX(-1);
 
     }
 }
