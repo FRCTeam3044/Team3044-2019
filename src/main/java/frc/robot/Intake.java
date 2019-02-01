@@ -8,7 +8,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import frc.reference.FirstController;
 import frc.reference.Hardware;
 import frc.reference.SecondController;
@@ -21,6 +21,7 @@ public class Intake {
     TalonSRX intakeArm2;
     TalonSRX intakeWrist;
     TalonSRX intakeWheels;
+    DoubleSolenoid hatchEject;
     FirstController firstController;
     SecondController secondtController;
 
