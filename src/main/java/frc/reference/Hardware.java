@@ -10,6 +10,8 @@ package frc.reference;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
@@ -18,6 +20,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 public class Hardware {
 
     private static Hardware instance = null;
+
+    public Compressor compressor = new Compressor();
 
     // Drive
     WPI_TalonSRX leftFrontDrive;
@@ -34,11 +38,14 @@ public class Hardware {
     public TalonSRX intakeArm2;
     public TalonSRX intakeWrist;
     public TalonSRX intakeWheels;
+    public DoubleSolenoid hatchEject;
 
     // Climb
     public TalonSRX climbArm1;
     public TalonSRX climbArm2;
     public TalonSRX climbWheels;
+    public DoubleSolenoid climbPiston1;
+    public DoubleSolenoid climbPiston2;
 
     public static Hardware getInstance() {
         if (instance == null) {
@@ -48,6 +55,11 @@ public class Hardware {
     }
 
     public void init() {
+        compressor.setClosedLoopControl(true);
+        // compressor.stop(); //Use this to stop the compressor.
+        // time = DriverStation.getInstance().getMatchTime(); //Maybe stop
+        // compressor in last 15 seconds.
+
         leftFrontDrive = new WPI_TalonSRX(0);
         rightFrontDrive = new WPI_TalonSRX(2);
         leftBackDrive = new WPI_TalonSRX(1);
@@ -61,17 +73,20 @@ public class Hardware {
         // motors move because of the follower.
         myDrive = new DifferentialDrive(leftFrontDrive, rightFrontDrive);
 
-        //Need to get actual CAN ID's for these
-        //Intake
+        // Need to get actual CAN ID's for these
+        // Intake
         intakeArm1 = new TalonSRX(-1);
         intakeArm2 = new TalonSRX(-1);
         intakeWrist = new TalonSRX(-1);
         intakeWheels = new TalonSRX(-1);
+        hatchEject = new DoubleSolenoid(-1, -1);
 
         // Climb
         climbArm1 = new TalonSRX(-1);
         climbArm2 = new TalonSRX(-1);
         climbWheels = new TalonSRX(-1);
+        climbPiston1 = new DoubleSolenoid(-1, -1);
+        climbPiston2 = new DoubleSolenoid(-1, -1);
 
     }
 }
