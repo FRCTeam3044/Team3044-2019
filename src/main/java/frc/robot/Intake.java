@@ -9,7 +9,9 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import frc.reference.FirstController;
 import frc.reference.Hardware;
+import frc.reference.SecondController;
 
 /**
  * Add your docs here.
@@ -19,11 +21,19 @@ public class Intake {
     TalonSRX intakeArm2;
     TalonSRX intakeWrist;
     TalonSRX intakeWheels;
+    FirstController firstController;
+    SecondController secondtController;
 
     public void IntakeInit(){
         intakeArm1 = Hardware.getInstance().intakeArm1;
         intakeArm2 = Hardware.getInstance().intakeArm2;
         intakeWrist = Hardware.getInstance().intakeWrist;
         intakeWheels = Hardware.getInstance().intakeWheels;
+        firstController = FirstController.getInstance();
+        secondtController = SecondController.getInstance();
+    }
+
+    public void IntakePeriodic() {
+
     }
 }

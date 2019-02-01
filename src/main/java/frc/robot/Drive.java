@@ -7,8 +7,8 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.reference.FirstController;
 import frc.reference.Hardware;
 
 /**
@@ -16,15 +16,15 @@ import frc.reference.Hardware;
  */
 public class Drive {
     DifferentialDrive myDrive;
-    Joystick first; // Not a good name
+    FirstController firstController;
 
     public void DriveInit() {
         myDrive = Hardware.getInstance().myDrive;
-        first = new Joystick(0);
+        firstController = FirstController.getInstance();
     }
 
     public void DrivePeriodic() {
-        driveTheBot(first.getRawAxis(1), first.getRawAxis(5)); // These raw axis are possibly correct
+        driveTheBot(firstController.getLeftY(), firstController.getRightY()); // These raw axis are possibly correct
     }
 
     /**
