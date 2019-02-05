@@ -7,8 +7,10 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import frc.reference.Hardware;
 
 /**
@@ -19,11 +21,34 @@ public class Intake {
     TalonSRX intakeArm2;
     TalonSRX intakeWrist;
     TalonSRX intakeWheels;
+    Solenoid hatchEject;
 
-    public void IntakeInit(){
+    public void IntakeInit() {
         intakeArm1 = Hardware.getInstance().intakeArm1;
         intakeArm2 = Hardware.getInstance().intakeArm2;
         intakeWrist = Hardware.getInstance().intakeWrist;
         intakeWheels = Hardware.getInstance().intakeWheels;
+        hatchEject = Hardware.getInstance().hatchEject;
+    }
+
+    void ejectHatch(boolean button) {
+        if (button) {
+            hatchEject.set(true);
+        } else {
+            hatchEject.set(false);
+        }
+    }
+
+    void spinCargoWheels(double speed) {
+        intakeWheels.set(ControlMode.PercentOutput, speed);
+    }
+
+    void moveShoulder(double speed) {
+        intakeArm1.set(ControlMode.PercentOutput, speed);
+        intakeArm2.set(ControlMode.PercentOutput, speed); // Inverted in hardware.java
+    }
+
+    void moveWrist(double speed) {
+        intakeWrist.set(ControlMode.PercentOutput, speed);
     }
 }

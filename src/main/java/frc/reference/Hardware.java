@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
@@ -38,7 +39,7 @@ public class Hardware {
     public TalonSRX intakeArm2;
     public TalonSRX intakeWrist;
     public TalonSRX intakeWheels;
-    public DoubleSolenoid hatchEject;
+    public Solenoid hatchEject;
 
     // Climb
     public TalonSRX climbArm1;
@@ -46,6 +47,7 @@ public class Hardware {
     public TalonSRX climbWheels;
     public DoubleSolenoid climbPiston1;
     public DoubleSolenoid climbPiston2;
+    public Solenoid lockPiston;
 
     public static Hardware getInstance() {
         if (instance == null) {
@@ -79,7 +81,9 @@ public class Hardware {
         intakeArm2 = new TalonSRX(-1);
         intakeWrist = new TalonSRX(-1);
         intakeWheels = new TalonSRX(-1);
-        hatchEject = new DoubleSolenoid(-1, -1);
+        hatchEject = new Solenoid(-1);
+
+        intakeArm2.setInverted(true);
 
         // Climb
         climbArm1 = new TalonSRX(-1);
@@ -87,6 +91,8 @@ public class Hardware {
         climbWheels = new TalonSRX(-1);
         climbPiston1 = new DoubleSolenoid(-1, -1);
         climbPiston2 = new DoubleSolenoid(-1, -1);
+        lockPiston = new Solenoid(-1);
 
+        climbArm2.setInverted(true);
     }
 }
