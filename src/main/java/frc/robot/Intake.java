@@ -17,17 +17,16 @@ import frc.reference.Hardware;
  * Add your docs here.
  */
 public class Intake {
-    TalonSRX intakeArm1;
-    TalonSRX intakeArm2;
+    TalonSRX intakeArm1, intakeArm2;
     TalonSRX intakeWrist;
-    TalonSRX intakeWheels;
+    TalonSRX cargoWheels;
     Solenoid hatchEject;
 
-    public void IntakeInit() {
+    public Intake() {
         intakeArm1 = Hardware.getInstance().intakeArm1;
         intakeArm2 = Hardware.getInstance().intakeArm2;
         intakeWrist = Hardware.getInstance().intakeWrist;
-        intakeWheels = Hardware.getInstance().intakeWheels;
+        cargoWheels = Hardware.getInstance().cargoWheels;
         hatchEject = Hardware.getInstance().hatchEject;
     }
 
@@ -40,7 +39,7 @@ public class Intake {
     }
 
     void spinCargoWheels(double speed) {
-        intakeWheels.set(ControlMode.PercentOutput, speed);
+        cargoWheels.set(ControlMode.PercentOutput, speed);
     }
 
     void moveShoulder(double speed) {

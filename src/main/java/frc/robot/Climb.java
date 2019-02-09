@@ -19,12 +19,10 @@ import frc.reference.Hardware;
  * Add your docs here.
  */
 public class Climb {
-    public TalonSRX climbArm1;
-    public TalonSRX climbArm2;
-    public TalonSRX climbWheels;
-    public DoubleSolenoid climbPiston1;
-    public DoubleSolenoid climbPiston2;
-    public Solenoid lockPiston;
+    TalonSRX climbArm1, climbArm2;
+    TalonSRX climbWheels;
+    DoubleSolenoid climbPiston1, climbPiston2;
+    Solenoid lockPiston;
 
     public Climb() {
         climbArm1 = Hardware.getInstance().climbArm1;

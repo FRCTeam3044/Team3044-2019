@@ -25,28 +25,22 @@ public class Hardware {
     public Compressor compressor = new Compressor();
 
     // Drive
-    WPI_TalonSRX leftFrontDrive;
-    WPI_TalonSRX rightFrontDrive;
-    WPI_TalonSRX leftBackDrive;
-    WPI_TalonSRX rightBackDrive;
+    WPI_TalonSRX leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive;
 
     // Used to call the provided tank drive.
     public DifferentialDrive myDrive;
 
     // These may need to be changed from TalonSRX to WPI_TalonSRX
     // Intake
-    public TalonSRX intakeArm1;
-    public TalonSRX intakeArm2;
+    public TalonSRX intakeArm1, intakeArm2;
     public TalonSRX intakeWrist;
-    public TalonSRX intakeWheels;
+    public TalonSRX cargoWheels;
     public Solenoid hatchEject;
 
     // Climb
-    public TalonSRX climbArm1;
-    public TalonSRX climbArm2;
+    public TalonSRX climbArm1, climbArm2;
     public TalonSRX climbWheels;
-    public DoubleSolenoid climbPiston1;
-    public DoubleSolenoid climbPiston2;
+    public DoubleSolenoid climbPiston1, climbPiston2;
     public Solenoid lockPiston;
 
     public static Hardware getInstance() {
@@ -80,7 +74,7 @@ public class Hardware {
         intakeArm1 = new TalonSRX(-1);
         intakeArm2 = new TalonSRX(-1);
         intakeWrist = new TalonSRX(-1);
-        intakeWheels = new TalonSRX(-1);
+        cargoWheels = new TalonSRX(-1);
         hatchEject = new Solenoid(-1);
 
         intakeArm2.setInverted(true);
