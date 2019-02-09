@@ -7,6 +7,7 @@
 
 package frc.reference;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -24,10 +25,10 @@ public class Hardware {
     public Compressor compressor = new Compressor();
 
     // Drive
-    WPI_TalonSRX leftFrontDrive;
-    WPI_TalonSRX rightFrontDrive;
-    WPI_TalonSRX leftBackDrive;
-    WPI_TalonSRX rightBackDrive;
+    public WPI_TalonSRX leftFrontDrive;
+    public WPI_TalonSRX rightFrontDrive;
+    public WPI_TalonSRX leftBackDrive;
+    public WPI_TalonSRX rightBackDrive;
 
     // Used to call the provided tank drive.
     public DifferentialDrive myDrive;
@@ -72,9 +73,11 @@ public class Hardware {
         // Uses front talons to define motors used in WPI tank drive, the back
         // motors move because of the follower.
         myDrive = new DifferentialDrive(leftFrontDrive, rightFrontDrive);
+        leftBackDrive.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 10);
+        rightBackDrive.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 10);
 
         // Need to get actual CAN ID's for these
-        // Intake
+        /*// Intake
         intakeArm1 = new TalonSRX(-1);
         intakeArm2 = new TalonSRX(-1);
         intakeWrist = new TalonSRX(-1);
@@ -87,6 +90,6 @@ public class Hardware {
         climbWheels = new TalonSRX(-1);
         climbPiston1 = new DoubleSolenoid(-1, -1);
         climbPiston2 = new DoubleSolenoid(-1, -1);
-
+        */
     }
 }
