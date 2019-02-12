@@ -22,12 +22,59 @@ public class Intake {
     TalonSRX cargoWheels;
     Solenoid hatchEject;
 
+    int CONVERSION; // Number of pot counts per x degrees rotation. May need to be a double.
+
+    String mode; // retract, hatches, cargo
+    String level; // ground, low, medium
+
+    // All measurements in degrees.
+    int SHOULDER_RETRACT = 0;
+    int WRIST_RETRACT = 0;
+
+    int SHOULDER_GROUND_HATCHES;
+    int SHOULDER_LOW_HATCHES;
+    int SHOULDER_MEDIUM_HATCHES;
+    int WRIST_GROUND_HATCHES = calcWristPosHatches(SHOULDER_GROUND_HATCHES);
+    int WRIST_LOW_HATCHES = calcWristPosHatches(SHOULDER_LOW_HATCHES);
+    int WRIST_MEDIUM_HATCHES = calcWristPosHatches(SHOULDER_MEDIUM_HATCHES);
+
+    int SHOULDER_GROUND_CARGO;
+    int SHOULDER_LOW_CARGO;
+    int SHOULDER_MEDIUM_CARGO;
+    int WRIST_GROUND_CARGO = calcWristPosCargo(SHOULDER_GROUND_CARGO);
+    int WRIST_LOW_CARGO = calcWristPosCargo(SHOULDER_LOW_CARGO);
+    int WRIST_MEDIUM_CARGO = calcWristPosCargo(SHOULDER_MEDIUM_CARGO);
+
     public Intake() {
         intakeArm1 = Hardware.getInstance().intakeArm1;
         intakeArm2 = Hardware.getInstance().intakeArm2;
         intakeWrist = Hardware.getInstance().intakeWrist;
         cargoWheels = Hardware.getInstance().cargoWheels;
         hatchEject = Hardware.getInstance().hatchEject;
+    }
+
+    void presetPositions() {
+        if (mode == "retract") {
+            setPositions(SHOULDER_RETRACT, WRIST_RETRACT);
+
+        } else if (mode == "hatches") {
+            if (level == "ground") {
+                setPositions(SHOULDER_GROUND_HATCHES, WRIST_GROUND_HATCHES);
+            } else if (level == "low") {
+                setPositions(SHOULDER_LOW_HATCHES, WRIST_LOW_HATCHES);
+            } else if (level == "medium") {
+                setPositions(SHOULDER_MEDIUM_HATCHES, WRIST_MEDIUM_HATCHES);
+            }
+
+        } else if (mode == "cargo") {
+            if (level == "ground") {
+                setPositions(SHOULDER_GROUND_CARGO, WRIST_GROUND_CARGO);
+            } else if (level == "low") {
+                setPositions(SHOULDER_LOW_CARGO, WRIST_LOW_CARGO);
+            } else if (level == "medium") {
+                setPositions(SHOULDER_MEDIUM_CARGO, WRIST_MEDIUM_CARGO);
+            }
+        }
     }
 
     void ejectHatch(boolean button) {
@@ -50,4 +97,54 @@ public class Intake {
     void moveWrist(double speed) {
         intakeWrist.set(ControlMode.PercentOutput, speed);
     }
+
+    void shoulderTo(int position) {
+
+    }
+
+    void wristTo(int position) {
+
+    }
+
+    void setPositions(int shoulderPosition, int wristPosition) {
+        shoulderTo(degreesToPotCounts(shoulderPosition));
+        wristTo(degreesToPotCounts(wristPosition));
+    }
+
+    int calcWristPosHatches(int armPositionDeg) {
+        return armPositionDeg + 90;
+    }
+
+    int calcWristPosCargo(int armPositionDeg) {
+        return armPositionDeg;
+    }
+
+    int degreesToPotCounts(int degrees) {
+        return CONVERSION * degrees;
+    }
+
+    void retractMode() {
+        mode = "hatches";
+    }
+
+    void hatchMode() {
+        mode = "hatches";
+    }
+
+    void cargoMode() {
+        mode = "cargo";
+    }
+
+    void goGround() {
+        level = "ground";
+    }
+
+    void goLow() {
+        level = "low";
+    }
+
+    void goMedium() {
+        level = "medium";
+    }
+
 }
