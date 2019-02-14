@@ -21,6 +21,8 @@ import frc.reference.Hardware;
  */
 public class Robot extends TimedRobot {
   Drive drive = new Drive();
+  Intake intake = new Intake();
+  Climb climb = new Climb();
 
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
@@ -34,7 +36,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     Hardware.getInstance().init();
-    drive.DriveInit();
 
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);

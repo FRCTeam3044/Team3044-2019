@@ -18,7 +18,7 @@ public class Drive {
     DifferentialDrive myDrive;
     Joystick first; // Not a good name
 
-    public void DriveInit() {
+    public Drive() {
         myDrive = Hardware.getInstance().myDrive;
         first = new Joystick(0);
     }
@@ -28,8 +28,8 @@ public class Drive {
     }
 
     /**
-     * Tank drive method that can be called anywhere. It calls upon the
-     * differential drive platform.
+     * Tank drive method that can be called anywhere. It calls upon the differential
+     * drive platform.
      * 
      * @param leftInput  The robot left side's speed along the X axis [-1.0..1.0].
      *                   Forward is positive.

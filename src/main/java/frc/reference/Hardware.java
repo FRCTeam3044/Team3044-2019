@@ -10,6 +10,9 @@ package frc.reference;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
@@ -19,26 +22,26 @@ public class Hardware {
 
     private static Hardware instance = null;
 
+    public Compressor compressor = new Compressor();
+
     // Drive
-    WPI_TalonSRX leftFrontDrive;
-    WPI_TalonSRX rightFrontDrive;
-    WPI_TalonSRX leftBackDrive;
-    WPI_TalonSRX rightBackDrive;
+    WPI_TalonSRX leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive;
 
     // Used to call the provided tank drive.
     public DifferentialDrive myDrive;
 
     // These may need to be changed from TalonSRX to WPI_TalonSRX
     // Intake
-    public TalonSRX intakeArm1;
-    public TalonSRX intakeArm2;
+    public TalonSRX intakeArm1, intakeArm2;
     public TalonSRX intakeWrist;
-    public TalonSRX intakeWheels;
+    public TalonSRX cargoWheels;
+    public Solenoid hatchEject;
 
     // Climb
-    public TalonSRX climbArm1;
-    public TalonSRX climbArm2;
+    public TalonSRX climbArm1, climbArm2;
     public TalonSRX climbWheels;
+    public DoubleSolenoid climbPiston1, climbPiston2;
+    public DoubleSolenoid lockPiston;
 
     public static Hardware getInstance() {
         if (instance == null) {
@@ -48,6 +51,11 @@ public class Hardware {
     }
 
     public void init() {
+        compressor.setClosedLoopControl(true);
+        // compressor.stop(); //Use this to stop the compressor.
+        // time = DriverStation.getInstance().getMatchTime(); //Maybe stop
+        // compressor in last 15 seconds.
+
         leftFrontDrive = new WPI_TalonSRX(0);
         rightFrontDrive = new WPI_TalonSRX(2);
         leftBackDrive = new WPI_TalonSRX(1);
@@ -61,17 +69,23 @@ public class Hardware {
         // motors move because of the follower.
         myDrive = new DifferentialDrive(leftFrontDrive, rightFrontDrive);
 
-        //Need to get actual CAN ID's for these
-        //Intake
-        intakeArm1 = new TalonSRX(-1);
-        intakeArm2 = new TalonSRX(-1);
-        intakeWrist = new TalonSRX(-1);
-        intakeWheels = new TalonSRX(-1);
+        // Intake
+        intakeArm1 = new TalonSRX(4);
+        intakeArm2 = new TalonSRX(5);
+        intakeWrist = new TalonSRX(6);
+        cargoWheels = new TalonSRX(7);
+        hatchEject = new Solenoid(6);
+
+        intakeArm2.setInverted(true);
 
         // Climb
-        climbArm1 = new TalonSRX(-1);
-        climbArm2 = new TalonSRX(-1);
-        climbWheels = new TalonSRX(-1);
+        climbArm1 = new TalonSRX(8);
+        climbArm2 = new TalonSRX(9);
+        climbWheels = new TalonSRX(10);
+        climbPiston1 = new DoubleSolenoid(0, 1);
+        climbPiston2 = new DoubleSolenoid(2, 3);
+        lockPiston = new DoubleSolenoid(4, 5);
 
+        climbArm2.setInverted(true);
     }
 }
