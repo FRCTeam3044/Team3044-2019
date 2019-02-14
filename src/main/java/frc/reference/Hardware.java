@@ -41,7 +41,7 @@ public class Hardware {
     public TalonSRX climbArm1, climbArm2;
     public TalonSRX climbWheels;
     public DoubleSolenoid climbPiston1, climbPiston2;
-    public Solenoid lockPiston;
+    public DoubleSolenoid lockPiston;
 
     public static Hardware getInstance() {
         if (instance == null) {
@@ -69,23 +69,22 @@ public class Hardware {
         // motors move because of the follower.
         myDrive = new DifferentialDrive(leftFrontDrive, rightFrontDrive);
 
-        // Need to get actual CAN ID's for these
         // Intake
-        intakeArm1 = new TalonSRX(-1);
-        intakeArm2 = new TalonSRX(-1);
-        intakeWrist = new TalonSRX(-1);
-        cargoWheels = new TalonSRX(-1);
-        hatchEject = new Solenoid(-1);
+        intakeArm1 = new TalonSRX(4);
+        intakeArm2 = new TalonSRX(5);
+        intakeWrist = new TalonSRX(6);
+        cargoWheels = new TalonSRX(7);
+        hatchEject = new Solenoid(6);
 
         intakeArm2.setInverted(true);
 
         // Climb
-        climbArm1 = new TalonSRX(-1);
-        climbArm2 = new TalonSRX(-1);
-        climbWheels = new TalonSRX(-1);
-        climbPiston1 = new DoubleSolenoid(-1, -1);
-        climbPiston2 = new DoubleSolenoid(-1, -1);
-        lockPiston = new Solenoid(-1);
+        climbArm1 = new TalonSRX(8);
+        climbArm2 = new TalonSRX(9);
+        climbWheels = new TalonSRX(10);
+        climbPiston1 = new DoubleSolenoid(0, 1);
+        climbPiston2 = new DoubleSolenoid(2, 3);
+        lockPiston = new DoubleSolenoid(4, 5);
 
         climbArm2.setInverted(true);
     }

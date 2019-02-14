@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.reference.Hardware;
 
@@ -22,7 +21,7 @@ public class Climb {
     TalonSRX climbArm1, climbArm2;
     TalonSRX climbWheels;
     DoubleSolenoid climbPiston1, climbPiston2;
-    Solenoid lockPiston;
+    DoubleSolenoid lockPiston;
 
     public Climb() {
         climbArm1 = Hardware.getInstance().climbArm1;
@@ -31,6 +30,8 @@ public class Climb {
         climbPiston1 = Hardware.getInstance().climbPiston1;
         climbPiston2 = Hardware.getInstance().climbPiston2;
         lockPiston = Hardware.getInstance().lockPiston;
+        
+        lockPiston.set(Value.kForward);
     }
 
     void habPistonLift(int level) {
@@ -80,7 +81,7 @@ public class Climb {
     }
 
     void unlock() {
-        lockPiston.set(true);
+        lockPiston.set(Value.kReverse);
     }
 
     void moveClimbingArm(double speed) {
