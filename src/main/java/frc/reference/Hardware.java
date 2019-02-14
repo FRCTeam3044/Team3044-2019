@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
@@ -21,6 +22,9 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 public class Hardware {
 
     private static Hardware instance = null;
+
+    public XboxController firstController = new XboxController(0);
+    XboxController secondController = new XboxController(0);
 
     public Compressor compressor = new Compressor();
 
