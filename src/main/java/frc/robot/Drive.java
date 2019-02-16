@@ -8,23 +8,25 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.reference.FirstController;
 import frc.reference.Hardware;
+import frc.reference.secondControllerMap;
 
 /**
  * Add your docs here.
  */
 public class Drive {
     DifferentialDrive myDrive;
-    FirstController firstController;
     WPI_TalonSRX leftBackDrive;
     double P, I, D;
     double error, previous_error, setpoint, integral, derivative, pidout;
+    XboxController firstController = Hardware.getInstance().firstController;
+    secondControllerMap map = new secondControllerMap();
 
-    public void DriveInit() {
+    public Drive() {
         myDrive = Hardware.getInstance().myDrive;
         firstController = FirstController.getInstance();
         leftBackDrive = Hardware.getInstance().leftBackDrive;
@@ -51,7 +53,11 @@ public class Drive {
 
     public void DrivePeriodic() {
         PID();
-        setpoint = firstController.getLeftY();
+        if (map.driverMode != "failure") {
+          setpoint = firstController.getY(Hand.kLeft);
+        } else {
+          setpoint = 0; 
+        }
         driveTheBot(pidout, pidout);
         //driveTheBot(firstController.getLeftY(), firstController.getRightY());
         if (firstController.getRawButton(4)) {
@@ -68,8 +74,8 @@ public class Drive {
     }
 
     /**
-     * Tank drive method that can be called anywhere. It calls upon the
-     * differential drive platform.
+     * Tank drive method that can be called anywhere. It calls upon the differential
+     * drive platform.
      * 
      * @param leftInput  The robot left side's speed along the X axis [-1.0..1.0].
      *                   Forward is positive.
