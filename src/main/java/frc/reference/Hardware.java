@@ -24,7 +24,7 @@ public class Hardware {
     private static Hardware instance = null;
 
     public XboxController firstController = new XboxController(0);
-    public XboxController secondController = new XboxController(0);
+    public XboxController secondController = new XboxController(1);
 
     public Compressor compressor = new Compressor();
 
