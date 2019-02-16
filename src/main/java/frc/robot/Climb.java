@@ -42,6 +42,10 @@ public class Climb {
         retract();
     }
 
+    public void ClimbPeriodic() {
+
+    }
+
     public void habPistonLift(int level) {
         switch (level) {
         case 0:

@@ -16,7 +16,7 @@ import frc.robot.Intake;
 /**
  * Add your docs here.
  */
-public class secondControllerMap {
+public class SecondControllerMap {
     XboxController secondController;
     XboxController firstController;
     public String driverMode; // score, climb, failure
@@ -25,7 +25,7 @@ public class secondControllerMap {
     Climb climb = new Climb();
     Drive drive = new Drive();
 
-    public secondControllerMap() {
+    public SecondControllerMap() {
         secondController = Hardware.getInstance().secondController;
         firstController = Hardware.getInstance().firstController;
     }

@@ -55,6 +55,10 @@ public class Intake {
         hatchEject = Hardware.getInstance().hatchEject;
     }
 
+    public void IntakePeriodic(){
+        presetPositions();
+    }
+
     void presetPositions() {
         if (mode == "retract") {
             setPositions(SHOULDER_RETRACT, WRIST_RETRACT);
