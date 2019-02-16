@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.reference.Hardware;
+import frc.reference.SecondControllerMap;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,6 +24,7 @@ public class Robot extends TimedRobot {
   Drive drive = new Drive();
   Intake intake = new Intake();
   Climb climb = new Climb();
+  SecondControllerMap secondControllerMap = new SecondControllerMap();
 
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
@@ -96,6 +98,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     drive.DrivePeriodic();
+    secondControllerMap.secondControllerMapPeriodic();
+    intake.IntakePeriodic();
+    climb.ClimbPeriodic();
   }
 
   /**

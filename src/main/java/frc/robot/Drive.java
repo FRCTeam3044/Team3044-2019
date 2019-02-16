@@ -7,24 +7,28 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.reference.Hardware;
+import frc.reference.secondControllerMap;
 
 /**
  * Add your docs here.
  */
 public class Drive {
     DifferentialDrive myDrive;
-    Joystick first; // Not a good name
+    XboxController firstController = Hardware.getInstance().firstController;
+    secondControllerMap map = new secondControllerMap();
 
     public Drive() {
         myDrive = Hardware.getInstance().myDrive;
-        first = new Joystick(0);
     }
 
     public void DrivePeriodic() {
-        driveTheBot(first.getRawAxis(1), first.getRawAxis(5)); // These raw axis are possibly correct
+        if (map.driverMode != "failure") {
+            driveTheBot(firstController.getY(Hand.kLeft), firstController.getY(Hand.kRight));
+        }
     }
 
     /**

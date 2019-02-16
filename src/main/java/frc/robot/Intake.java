@@ -25,7 +25,7 @@ public class Intake {
     int CONVERSION; // Number of pot counts per x degrees rotation. May need to be a double.
 
     String mode; // retract, hatches, cargo
-    String level; // ground, low, medium
+    String level; // ground, low, medium, feeder
 
     // All measurements in degrees.
     int SHOULDER_RETRACT = 0;
@@ -44,6 +44,8 @@ public class Intake {
     int WRIST_GROUND_CARGO = calcWristPosCargo(SHOULDER_GROUND_CARGO);
     int WRIST_LOW_CARGO = calcWristPosCargo(SHOULDER_LOW_CARGO);
     int WRIST_MEDIUM_CARGO = calcWristPosCargo(SHOULDER_MEDIUM_CARGO);
+    int SHOULDER_FEEDER_CARGO;
+    int WRIST_FEEDER_CARGO = calcWristPosCargo(SHOULDER_FEEDER_CARGO);
 
     public Intake() {
         intakeArm1 = Hardware.getInstance().intakeArm1;
@@ -51,6 +53,10 @@ public class Intake {
         intakeWrist = Hardware.getInstance().intakeWrist;
         cargoWheels = Hardware.getInstance().cargoWheels;
         hatchEject = Hardware.getInstance().hatchEject;
+    }
+
+    public void IntakePeriodic(){
+        presetPositions();
     }
 
     void presetPositions() {
@@ -73,11 +79,13 @@ public class Intake {
                 setPositions(SHOULDER_LOW_CARGO, WRIST_LOW_CARGO);
             } else if (level == "medium") {
                 setPositions(SHOULDER_MEDIUM_CARGO, WRIST_MEDIUM_CARGO);
+            } else if (level == "feeder") {
+                setPositions(SHOULDER_FEEDER_CARGO, WRIST_FEEDER_CARGO);
             }
         }
     }
 
-    void ejectHatch(boolean button) {
+    public void ejectHatch(boolean button) {
         if (button) {
             hatchEject.set(true);
         } else {
@@ -85,7 +93,7 @@ public class Intake {
         }
     }
 
-    void spinCargoWheels(double speed) {
+    public void spinCargoWheels(double speed) {
         cargoWheels.set(ControlMode.PercentOutput, speed);
     }
 
@@ -123,28 +131,32 @@ public class Intake {
         return CONVERSION * degrees;
     }
 
-    void retractMode() {
+    public void retractMode() {
+        mode = "retract";
+    }
+
+    public void hatchMode() {
         mode = "hatches";
     }
 
-    void hatchMode() {
-        mode = "hatches";
-    }
-
-    void cargoMode() {
+    public void cargoMode() {
         mode = "cargo";
     }
 
-    void goGround() {
+    public void goGround() {
         level = "ground";
     }
 
-    void goLow() {
+    public void goLow() {
         level = "low";
     }
 
-    void goMedium() {
+    public void goMedium() {
         level = "medium";
+    }
+
+    public void goFeeder() {
+        level = "feeder";
     }
 
 }
