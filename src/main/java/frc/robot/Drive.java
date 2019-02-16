@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.reference.Hardware;
+import frc.reference.secondControllerMap;
 
 /**
  * Add your docs here.
@@ -18,13 +19,16 @@ import frc.reference.Hardware;
 public class Drive {
     DifferentialDrive myDrive;
     XboxController firstController = Hardware.getInstance().firstController;
+    secondControllerMap map = new secondControllerMap();
 
     public Drive() {
         myDrive = Hardware.getInstance().myDrive;
     }
 
     public void DrivePeriodic() {
-        driveTheBot(firstController.getY(Hand.kLeft), firstController.getY(Hand.kRight));
+        if (map.driverMode != "failure") {
+            driveTheBot(firstController.getY(Hand.kLeft), firstController.getY(Hand.kRight));
+        }
     }
 
     /**

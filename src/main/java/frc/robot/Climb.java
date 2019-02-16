@@ -23,6 +23,13 @@ public class Climb {
     DoubleSolenoid climbPiston1, climbPiston2;
     DoubleSolenoid lockPiston;
 
+    boolean pistonsExtended;
+    int RETRACT;
+    int LEVEL_TWO;
+    int LEVEL_TWO_MOD;
+    int LEVEL_THREE;
+    int LEVEL_THREE_MOD;
+
     public Climb() {
         climbArm1 = Hardware.getInstance().climbArm1;
         climbArm2 = Hardware.getInstance().climbArm2;
@@ -30,30 +37,31 @@ public class Climb {
         climbPiston1 = Hardware.getInstance().climbPiston1;
         climbPiston2 = Hardware.getInstance().climbPiston2;
         lockPiston = Hardware.getInstance().lockPiston;
-        
+
         lockPiston.set(Value.kForward);
+        retract();
     }
 
-    void habPistonLift(int level) {
+    public void habPistonLift(int level) {
         switch (level) {
         case 0:
             retractBothPistons();
             break;
 
-        case 1:
+        case 2:
             if (getPistonLimitSwitch()) {
                 pistonsOff();
-                level = 3;
+                level = 4;
             } else {
                 extendBothPistons();
             }
             break;
 
-        case 2:
+        case 3:
             extendBothPistons();
             break;
 
-        case 3:
+        case 4:
         default:
             pistonsOff();
 
@@ -63,11 +71,13 @@ public class Climb {
     void extendBothPistons() {
         climbPiston1.set(Value.kForward);
         climbPiston2.set(Value.kForward);
+        pistonsExtended = true;
     }
 
     void retractBothPistons() {
         climbPiston1.set(Value.kReverse);
         climbPiston2.set(Value.kReverse);
+        pistonsExtended = false;
     }
 
     void pistonsOff() {
@@ -89,8 +99,34 @@ public class Climb {
         climbArm2.set(ControlMode.PercentOutput, speed); // Already inverted in hardware.java
     }
 
-    void moveClimbingWheels(double speed) {
+    public void moveClimbingWheels(double speed) {
         climbWheels.set(ControlMode.PercentOutput, speed);
+    }
+
+    void armTo(int position) {
+
+    }
+
+    public void retract() {
+        armTo(RETRACT);
+    }
+
+    public void levelTwo() {
+        unlock();
+        if (!pistonsExtended) {
+            armTo(LEVEL_TWO);
+        } else {
+            armTo(LEVEL_TWO_MOD);
+        }
+    }
+
+    public void levelThree() {
+        unlock();
+        if (!pistonsExtended) {
+            armTo(LEVEL_THREE);
+        } else {
+            armTo(LEVEL_THREE_MOD);
+        }
     }
 
 }
