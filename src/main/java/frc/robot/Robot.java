@@ -11,8 +11,8 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.reference.ControllerMap;
 import frc.reference.Hardware;
-import frc.reference.SecondControllerMap;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,8 +23,7 @@ import frc.reference.SecondControllerMap;
  */
 public class Robot extends TimedRobot {
   public Hardware hardware = Hardware.getInstance();
-  public SecondControllerMap secondControllerMap;
-  
+  public ControllerMap controllerMap;
 
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
@@ -39,8 +38,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Hardware.getInstance().init();
     hardware.init();
-    secondControllerMap = SecondControllerMap.getInstance();
-    secondControllerMap.secondControllerMapInit();
+    controllerMap = ControllerMap.getInstance();
+    controllerMap.controllerMapInit();
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -102,11 +101,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     // drive.DrivePeriodic();
-    secondControllerMap.secondControllerMapPeriodic();
+    controllerMap.controllerMapPeriodic();
     // intake.IntakePeriodic();
     // climb.ClimbPeriodic();
 
-    
   }
 
   /**
