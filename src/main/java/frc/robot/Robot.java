@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,10 +22,9 @@ import frc.reference.SecondControllerMap;
  * project.
  */
 public class Robot extends TimedRobot {
-  Drive drive = new Drive();
-  Intake intake = new Intake();
-  Climb climb = new Climb();
-  SecondControllerMap secondControllerMap = new SecondControllerMap();
+  public Hardware hardware = Hardware.getInstance();
+  public SecondControllerMap secondControllerMap;
+  
 
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
@@ -37,11 +37,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    Hardware.getInstance().init();
-
+    // Hardware.getInstance().init();
+    hardware.init();
+    secondControllerMap = SecondControllerMap.getInstance();
+    secondControllerMap.secondControllerMapInit();
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+
+    CameraServer.getInstance().startAutomaticCapture();
   }
 
   /**
@@ -97,10 +101,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    drive.DrivePeriodic();
+    // drive.DrivePeriodic();
     secondControllerMap.secondControllerMapPeriodic();
-    intake.IntakePeriodic();
-    climb.ClimbPeriodic();
+    // intake.IntakePeriodic();
+    // climb.ClimbPeriodic();
+
+    
   }
 
   /**

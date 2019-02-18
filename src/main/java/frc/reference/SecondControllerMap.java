@@ -7,27 +7,48 @@
 
 package frc.reference;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.Climb;
 import frc.robot.Drive;
 import frc.robot.Intake;
+import frc.robot.Robot;
+import edu.wpi.first.wpilibj.XboxController;
 
 /**
  * Add your docs here.
  */
-public class SecondControllerMap {
-    XboxController secondController;
-    XboxController firstController;
-    public String driverMode; // score, climb, failure
+public class SecondControllerMap extends Robot {
+    public Drive drive = Drive.getInstance();
+    public Intake intake = Intake.getInstance();
+    public Climb climb = Climb.getInstance();
+    private static SecondControllerMap instance = null;
 
-    Intake intake = new Intake();
-    Climb climb = new Climb();
-    Drive drive = new Drive();
+    /*
+     * XboxController secondController; public XboxController firstController;
+     */
+    public static String driverMode; // score, climb, failureFirst, failureSecond
 
-    public SecondControllerMap() {
-        secondController = Hardware.getInstance().secondController;
-        firstController = Hardware.getInstance().firstController;
+    /*
+     * Intake intake = new Intake(); Climb climb = new Climb(); Drive drive = new
+     * Drive();
+     */
+
+    // public SecondControllerMap() {
+    /*
+     * secondController = Hardware.getInstance().secondController; firstController =
+     * Hardware.getInstance().firstController;
+     */
+    // }
+
+    public static SecondControllerMap getInstance() {
+        if (instance == null) {
+            instance = new SecondControllerMap();
+        }
+        return instance;
+    }
+
+    public void secondControllerMapInit() {
+        driverMode = "score";
     }
 
     public void secondControllerMapPeriodic() {
@@ -37,78 +58,84 @@ public class SecondControllerMap {
         } else if (driverMode == "climb") {
             climbMode();
         } else if (driverMode == "failureSecond") {
-            failureMode(secondController);
+            failureMode(hardware.secondController);
         } else if (driverMode == "failureFirst") {
-            failureMode(firstController);
+            failureMode(hardware.firstController);
         }
+
+        if (driverMode != "failureFirst" && driverMode != "failureSecond") {
+            drive.driveTheBot(hardware.firstController.getY(Hand.kLeft), hardware.firstController.getY(Hand.kRight));
+        }
+
+        intake.IntakePeriodic();
     }
 
     void scoreMode() {
-        if (secondController.getYButtonPressed()) {
+        if (hardware.secondController.getYButtonPressed()) {
             intake.hatchMode();
             intake.goMedium();
         }
-        if (secondController.getXButtonPressed()) {
+        if (hardware.secondController.getXButtonPressed()) {
             intake.hatchMode();
             intake.goLow();
         }
-        if (secondController.getAButtonPressed()) {
+        if (hardware.secondController.getAButtonPressed()) {
             intake.hatchMode();
             intake.goGround();
         }
-        if (secondController.getBButtonPressed()) {
+        if (hardware.secondController.getBButtonPressed()) {
             intake.retractMode();
         }
 
-        if (secondController.getPOV() == 0) {// up d-pad
+        if (hardware.secondController.getPOV() == 0) {// up d-pad
             intake.cargoMode();
             intake.goMedium();
         }
-        if (secondController.getPOV() == 90) {// right d-pad
+        if (hardware.secondController.getPOV() == 90) {// right d-pad
             intake.cargoMode();
             intake.goFeeder();
         }
-        if (secondController.getPOV() == 180) {// down d-pad
+        if (hardware.secondController.getPOV() == 180) {// down d-pad
             intake.cargoMode();
             intake.goGround();
         }
-        if (secondController.getPOV() == 270) {// left d-pad
+        if (hardware.secondController.getPOV() == 270) {// left d-pad
             intake.cargoMode();
             intake.goLow();
         }
 
-        if (secondController.getBumper(Hand.kLeft)) {
+        if (hardware.secondController.getBumper(Hand.kLeft)) {
             intake.spinCargoWheels(.5);
         }
-        if (secondController.getTriggerAxis(Hand.kLeft) > .1) {
+        if (hardware.secondController.getTriggerAxis(Hand.kLeft) > .1) {
             intake.spinCargoWheels(-.5);
         }
 
-        intake.ejectHatch(secondController.getBumper(Hand.kRight));
+        intake.ejectHatch(hardware.secondController.getBumper(Hand.kRight));
     }
 
     void climbMode() {
-        if (secondController.getTriggerAxis(Hand.kLeft) > .1) {
+        if (hardware.secondController.getTriggerAxis(Hand.kLeft) > .1) {
             climb.habPistonLift(2);
         }
-        if (secondController.getTriggerAxis(Hand.kRight) > .1) {
+        if (hardware.secondController.getTriggerAxis(Hand.kRight) > .1) {
             climb.habPistonLift(3);
         }
-        if (secondController.getBumperPressed(Hand.kLeft)) {
+        if (hardware.secondController.getBumperPressed(Hand.kLeft)) {
             climb.habPistonLift(0);
         }
-        if (secondController.getBButtonPressed()) {
+        if (hardware.secondController.getBButtonPressed()) {
             intake.retractMode();
         }
 
-        if (secondController.getYButtonPressed()) {
+        if (hardware.secondController.getYButtonPressed()) {
             climb.retract();
         }
 
-        if (secondController.getXButtonPressed()) {
+        if (hardware.secondController.getXButtonPressed()) {
             climb.levelThree();
         }
-        if (secondController.getAButtonPressed()) {
+        if (hardware.secondController.getAButtonPressed()) {
             climb.levelTwo();
         }
     }
@@ -142,16 +169,17 @@ public class SecondControllerMap {
     }
 
     void switchMode() {
-        if (secondController.getBackButton() && secondController.getStartButton()) {
+        if (hardware.secondController.getBackButton() && hardware.secondController.getStartButton()) {
             driverMode = "failureSecond";
-        } else if (firstController.getBackButton() && firstController.getStartButton()) {
+        } else if (hardware.firstController.getBackButton() && hardware.firstController.getStartButton()) {
             driverMode = "failureFirst";
-        } else if (secondController.getStartButtonPressed()) {
+        } else if (hardware.secondController.getStartButtonPressed()) {
             if (driverMode == "score") {
                 driverMode = "climb";
-            } else {
+            } else if (driverMode == "climb") {
                 driverMode = "score";
             }
+        } else {
         }
     }
 }
