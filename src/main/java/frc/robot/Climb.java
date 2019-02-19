@@ -8,20 +8,19 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.reference.Hardware;
 
 /**
  * Add your docs here.
  */
-public class Climb {
-    TalonSRX climbArm1, climbArm2;
+public class Climb extends Hardware{
+    private static Climb instance = null;
+    /*TalonSRX climbArm1, climbArm2;
     TalonSRX climbWheels;
     DoubleSolenoid climbPiston1, climbPiston2;
-    DoubleSolenoid lockPiston;
+    DoubleSolenoid lockPiston;*/
 
     boolean pistonsExtended;
     int RETRACT;
@@ -30,16 +29,23 @@ public class Climb {
     int LEVEL_THREE;
     int LEVEL_THREE_MOD;
 
-    public Climb() {
-        climbArm1 = Hardware.getInstance().climbArm1;
+    //public Climb() {
+        /* climbArm1 = Hardware.getInstance().climbArm1;
         climbArm2 = Hardware.getInstance().climbArm2;
         climbWheels = Hardware.getInstance().climbWheels;
         climbPiston1 = Hardware.getInstance().climbPiston1;
         climbPiston2 = Hardware.getInstance().climbPiston2;
         lockPiston = Hardware.getInstance().lockPiston;
+ */
+       // Hardware.lockPiston.set(Value.kForward);
+       // retract();
+    //}
 
-        lockPiston.set(Value.kForward);
-        retract();
+    public static Climb getInstance() {
+        if (instance == null) {
+            instance = new Climb();
+        }
+        return instance;
     }
 
     public void ClimbPeriodic() {
