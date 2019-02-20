@@ -104,7 +104,7 @@ public class Climb extends Hardware{
         lockPiston.set(Value.kReverse);
     }
 
-    void moveClimbingArm(double speed) {
+    public void moveClimbingArm(double speed) {
         climbArm1.set(ControlMode.PercentOutput, speed);
         climbArm2.set(ControlMode.PercentOutput, speed); // Already inverted in hardware.java
     }

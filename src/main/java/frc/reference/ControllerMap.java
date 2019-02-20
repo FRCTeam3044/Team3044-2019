@@ -63,6 +63,9 @@ public class ControllerMap {
     }
 
     void scoreMode() {
+        intake.moveShoulder(secondController.getY(Hand.kRight));
+        intake.moveWrist(secondController.getY(Hand.kLeft));
+
         if (secondController.getYButtonPressed()) {
             intake.hatchMode();
             intake.goMedium();
@@ -98,15 +101,19 @@ public class ControllerMap {
 
         if (secondController.getBumper(Hand.kLeft)) {
             intake.spinCargoWheels(.5);
-        }
-        if (secondController.getTriggerAxis(Hand.kLeft) > .1) {
+        } else if (secondController.getTriggerAxis(Hand.kLeft) > .1) {
             intake.spinCargoWheels(-.5);
+        } else {
+            intake.spinCargoWheels(0);
         }
 
         intake.ejectHatch(secondController.getBumper(Hand.kRight));
     }
 
     void climbMode() {
+        climb.moveClimbingArm(secondController.getY(Hand.kRight));
+        climb.moveClimbingWheels(secondController.getY(Hand.kLeft));
+
         if (secondController.getTriggerAxis(Hand.kLeft) > .1) {
             climb.habPistonLift(2);
         }

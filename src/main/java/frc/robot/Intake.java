@@ -21,30 +21,30 @@ public class Intake extends Hardware{
     TalonSRX cargoWheels;
     Solenoid hatchEject; */
 
-    int CONVERSION; // Number of pot counts per x degrees rotation. May need to be a double.
+    double CONVERSION; // Number of pot counts per x degrees rotation. May need to be a double.
 
     String mode; // retract, hatches, cargo
     String level; // ground, low, medium, feeder
 
     // All measurements in degrees.
-    int SHOULDER_RETRACT = 0;
-    int WRIST_RETRACT = 0;
+    double SHOULDER_RETRACT = 0;
+    double WRIST_RETRACT = 0;
 
-    int SHOULDER_GROUND_HATCHES;
-    int SHOULDER_LOW_HATCHES;
-    int SHOULDER_MEDIUM_HATCHES;
-    int WRIST_GROUND_HATCHES = calcWristPosHatches(SHOULDER_GROUND_HATCHES);
-    int WRIST_LOW_HATCHES = calcWristPosHatches(SHOULDER_LOW_HATCHES);
-    int WRIST_MEDIUM_HATCHES = calcWristPosHatches(SHOULDER_MEDIUM_HATCHES);
+    double SHOULDER_GROUND_HATCHES=6.5;
+    double SHOULDER_LOW_HATCHES=6.5;
+    double SHOULDER_MEDIUM_HATCHES=80.5;
+    double WRIST_GROUND_HATCHES = calcWristPosHatches(SHOULDER_GROUND_HATCHES);
+    double WRIST_LOW_HATCHES = calcWristPosHatches(SHOULDER_LOW_HATCHES);
+    double WRIST_MEDIUM_HATCHES = calcWristPosHatches(SHOULDER_MEDIUM_HATCHES);
 
-    int SHOULDER_GROUND_CARGO;
-    int SHOULDER_LOW_CARGO;
-    int SHOULDER_MEDIUM_CARGO;
-    int WRIST_GROUND_CARGO = calcWristPosCargo(SHOULDER_GROUND_CARGO);
-    int WRIST_LOW_CARGO = calcWristPosCargo(SHOULDER_LOW_CARGO);
-    int WRIST_MEDIUM_CARGO = calcWristPosCargo(SHOULDER_MEDIUM_CARGO);
-    int SHOULDER_FEEDER_CARGO;
-    int WRIST_FEEDER_CARGO = calcWristPosCargo(SHOULDER_FEEDER_CARGO);
+    double SHOULDER_GROUND_CARGO;
+    double SHOULDER_LOW_CARGO;
+    double SHOULDER_MEDIUM_CARGO;
+    double WRIST_GROUND_CARGO = calcWristPosCargo(SHOULDER_GROUND_CARGO);
+    double WRIST_LOW_CARGO = calcWristPosCargo(SHOULDER_LOW_CARGO);
+    double WRIST_MEDIUM_CARGO = calcWristPosCargo(SHOULDER_MEDIUM_CARGO);
+    double SHOULDER_FEEDER_CARGO;
+    double WRIST_FEEDER_CARGO = calcWristPosCargo(SHOULDER_FEEDER_CARGO);
 
     //public Intake() {
         /* intakeArm1 = Hardware.getInstance().intakeArm1;
@@ -103,37 +103,37 @@ public class Intake extends Hardware{
         cargoWheels.set(ControlMode.PercentOutput, speed);
     }
 
-    void moveShoulder(double speed) {
+    public void moveShoulder(double speed) {
         intakeArm1.set(ControlMode.PercentOutput, speed);
         intakeArm2.set(ControlMode.PercentOutput, speed); // Inverted in hardware.java
     }
 
-    void moveWrist(double speed) {
+    public void moveWrist(double speed) {
         intakeWrist.set(ControlMode.PercentOutput, speed);
     }
 
-    void shoulderTo(int position) {
+    void shoulderTo(double position) {
 
     }
 
-    void wristTo(int position) {
+    void wristTo(double position) {
 
     }
 
-    void setPositions(int shoulderPosition, int wristPosition) {
+    void setPositions(double shoulderPosition, double wristPosition) {
         shoulderTo(degreesToPotCounts(shoulderPosition));
         wristTo(degreesToPotCounts(wristPosition));
     }
 
-    int calcWristPosHatches(int armPositionDeg) {
+    double calcWristPosHatches(double armPositionDeg) {
         return armPositionDeg + 90;
     }
 
-    int calcWristPosCargo(int armPositionDeg) {
+    double calcWristPosCargo(double armPositionDeg) {
         return armPositionDeg;
     }
 
-    int degreesToPotCounts(int degrees) {
+    double degreesToPotCounts(double degrees) {
         return CONVERSION * degrees;
     }
 
