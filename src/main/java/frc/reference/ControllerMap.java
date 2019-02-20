@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.Climb;
 import frc.robot.Drive;
 import frc.robot.Intake;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
 
 /**
@@ -27,6 +30,17 @@ public class ControllerMap {
     public XboxController secondController = new XboxController(1);
 
     public static String driverMode; // score, climb, failureFirst, failureSecond
+    public static Boolean pidMode; //enabled, disabled
+
+    static WPI_TalonSRX leftFrontDrive;
+    static WPI_TalonSRX rightFrontDrive;
+
+    static TalonEncoderPIDSource leftPIDSource;
+    static TalonEncoderPIDSource rightPIDSource;
+
+    double kP, kI, kD;
+    PIDController leftPIDController;
+    PIDController rightPIDController;
 
     /*
      * public ControllerMap() { }
@@ -41,6 +55,16 @@ public class ControllerMap {
 
     public void controllerMapInit() {
         driverMode = "score";
+        pidMode = true;
+        kP = 1;
+        kI = 0.1;
+        kD = 0;
+        leftFrontDrive = Hardware.getInstance().leftFrontDrive;
+        rightFrontDrive = Hardware.getInstance().rightFrontDrive;
+        leftPIDSource = new TalonEncoderPIDSource(leftFrontDrive, PIDSourceType.kRate);
+        rightPIDSource = new TalonEncoderPIDSource(rightFrontDrive, PIDSourceType.kRate);
+        leftPIDController = new PIDController(kP, kI, kD, leftPIDSource, leftFrontDrive);
+        rightPIDController = new PIDController(kP, kI, kD, rightPIDSource, rightFrontDrive);
     }
 
     public void controllerMapPeriodic() {
@@ -56,7 +80,12 @@ public class ControllerMap {
         }
 
         if (driverMode != "failureFirst" && driverMode != "failureSecond") {
-            drive.driveTheBot(firstController.getY(Hand.kLeft), firstController.getY(Hand.kRight));
+            if (!pidMode) {
+                drive.driveTheBot(firstController.getY(Hand.kLeft), firstController.getY(Hand.kRight));
+            }  else {
+                leftPIDController.setSetpoint(firstController.getY(Hand.kLeft));
+                rightPIDController.setSetpoint(firstController.getY(Hand.kRight));
+            }
         }
 
         intake.IntakePeriodic();
@@ -172,5 +201,9 @@ public class ControllerMap {
                 driverMode = "score";
             }
         }
+    }
+
+    double PID(double setpoint) {
+        return setpoint;
     }
 }

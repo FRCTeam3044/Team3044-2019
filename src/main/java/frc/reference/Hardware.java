@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
@@ -87,5 +88,11 @@ public class Hardware {
         lockPiston = new DoubleSolenoid(4, 5);
 
         climbArm2.setInverted(true);
+        
+        // This is how you instantiate the custom PIDSource 
+        TalonEncoderPIDSource pidSource = new TalonEncoderPIDSource(leftFrontDrive, 
+                PIDSourceType.kRate); // Set the 2nd Parameter (PIDSourceType) appropriately 
+
+
     }
 }
