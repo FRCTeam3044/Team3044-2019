@@ -8,8 +8,12 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import frc.reference.FirstController;
+import edu.wpi.first.wpilibj.Solenoid;
 import frc.reference.Hardware;
+import frc.reference.SecondController;
 
 /**
  * Add your docs here.
@@ -18,6 +22,8 @@ public class Intake extends Hardware{
     private static Intake instance = null;
     /* TalonSRX intakeArm1, intakeArm2;
     TalonSRX intakeWrist;
+    FirstController firstController;
+    SecondController secondtController;
     TalonSRX cargoWheels;
     Solenoid hatchEject; */
 
@@ -50,6 +56,7 @@ public class Intake extends Hardware{
         /* intakeArm1 = Hardware.getInstance().intakeArm1;
         intakeArm2 = Hardware.getInstance().intakeArm2;
         intakeWrist = Hardware.getInstance().intakeWrist;
+
         cargoWheels = Hardware.getInstance().cargoWheels;
         hatchEject = Hardware.getInstance().hatchEject; */
     //}

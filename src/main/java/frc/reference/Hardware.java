@@ -7,6 +7,7 @@
 
 package frc.reference;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -26,7 +27,7 @@ public class Hardware {
     public static Compressor compressor = new Compressor();
 
     // Drive
-    static WPI_TalonSRX leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive;
+    public static WPI_TalonSRX leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive;
 
     // Used to call the provided tank drive.
     public static DifferentialDrive myDrive;
@@ -69,6 +70,8 @@ public class Hardware {
         // Uses front talons to define motors used in WPI tank drive, the back
         // motors move because of the follower.
         myDrive = new DifferentialDrive(leftFrontDrive, rightFrontDrive);
+        leftBackDrive.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 10);
+        rightBackDrive.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 10);
 
         // Intake
         intakeArm1 = new TalonSRX(4);
