@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
@@ -22,26 +23,29 @@ public class Hardware {
 
     private static Hardware instance = null;
 
-    public static Compressor compressor = new Compressor();
+    public XboxController firstController = new XboxController(0);
+    public XboxController secondController = new XboxController(1);
+
+    public Compressor compressor = new Compressor();
 
     // Drive
-    static WPI_TalonSRX leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive;
+    WPI_TalonSRX leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive;
 
     // Used to call the provided tank drive.
-    public static DifferentialDrive myDrive;
+    public DifferentialDrive myDrive;
 
     // These may need to be changed from TalonSRX to WPI_TalonSRX
     // Intake
-    public static TalonSRX intakeArm1, intakeArm2;
-    public static TalonSRX intakeWrist;
-    public static TalonSRX cargoWheels;
-    public static Solenoid hatchEject;
+    public TalonSRX intakeArm1, intakeArm2;
+    public TalonSRX intakeWrist;
+    public TalonSRX cargoWheels;
+    public Solenoid hatchEject;
 
     // Climb
-    public static TalonSRX climbArm1, climbArm2;
-    public static TalonSRX climbWheels;
-    public static DoubleSolenoid climbPiston1, climbPiston2;
-    public static DoubleSolenoid lockPiston;
+    public TalonSRX climbArm1, climbArm2;
+    public TalonSRX climbWheels;
+    public DoubleSolenoid climbPiston1, climbPiston2;
+    public DoubleSolenoid lockPiston;
 
     public static Hardware getInstance() {
         if (instance == null) {

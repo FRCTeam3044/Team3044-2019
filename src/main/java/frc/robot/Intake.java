@@ -8,18 +8,19 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import frc.reference.Hardware;
 
 /**
  * Add your docs here.
  */
-public class Intake extends Hardware{
-    private static Intake instance = null;
-    /* TalonSRX intakeArm1, intakeArm2;
+public class Intake {
+    TalonSRX intakeArm1, intakeArm2;
     TalonSRX intakeWrist;
     TalonSRX cargoWheels;
-    Solenoid hatchEject; */
+    Solenoid hatchEject;
 
     int CONVERSION; // Number of pot counts per x degrees rotation. May need to be a double.
 
@@ -46,19 +47,12 @@ public class Intake extends Hardware{
     int SHOULDER_FEEDER_CARGO;
     int WRIST_FEEDER_CARGO = calcWristPosCargo(SHOULDER_FEEDER_CARGO);
 
-    //public Intake() {
-        /* intakeArm1 = Hardware.getInstance().intakeArm1;
+    public Intake() {
+        intakeArm1 = Hardware.getInstance().intakeArm1;
         intakeArm2 = Hardware.getInstance().intakeArm2;
         intakeWrist = Hardware.getInstance().intakeWrist;
         cargoWheels = Hardware.getInstance().cargoWheels;
-        hatchEject = Hardware.getInstance().hatchEject; */
-    //}
-
-    public static Intake getInstance() {
-        if (instance == null) {
-            instance = new Intake();
-        }
-        return instance;
+        hatchEject = Hardware.getInstance().hatchEject;
     }
 
     public void IntakePeriodic(){

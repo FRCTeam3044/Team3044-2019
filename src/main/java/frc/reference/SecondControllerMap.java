@@ -7,43 +7,30 @@
 
 package frc.reference;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.Climb;
 import frc.robot.Drive;
 import frc.robot.Intake;
-import edu.wpi.first.wpilibj.XboxController;
 
 /**
  * Add your docs here.
  */
-public class ControllerMap {
-    private static ControllerMap instance = null;
+public class SecondControllerMap {
+    XboxController secondController;
+    XboxController firstController;
+    public String driverMode; // score, climb, failure
 
-    public Drive drive = Drive.getInstance();
-    public Intake intake = Intake.getInstance();
-    public Climb climb = Climb.getInstance();
+    Intake intake = new Intake();
+    Climb climb = new Climb();
+    Drive drive = new Drive();
 
-    public XboxController firstController = new XboxController(0);
-    public XboxController secondController = new XboxController(1);
-
-    public static String driverMode; // score, climb, failureFirst, failureSecond
-
-    /*
-     * public ControllerMap() { }
-     */
-
-    public static ControllerMap getInstance() {
-        if (instance == null) {
-            instance = new ControllerMap();
-        }
-        return instance;
+    public SecondControllerMap() {
+        secondController = Hardware.getInstance().secondController;
+        firstController = Hardware.getInstance().firstController;
     }
 
-    public void controllerMapInit() {
-        driverMode = "score";
-    }
-
-    public void controllerMapPeriodic() {
+    public void secondControllerMapPeriodic() {
         switchMode();
         if (driverMode == "score") {
             scoreMode();
@@ -54,12 +41,6 @@ public class ControllerMap {
         } else if (driverMode == "failureFirst") {
             failureMode(firstController);
         }
-
-        if (driverMode != "failureFirst" && driverMode != "failureSecond") {
-            drive.driveTheBot(firstController.getY(Hand.kLeft), firstController.getY(Hand.kRight));
-        }
-
-        intake.IntakePeriodic();
     }
 
     void scoreMode() {
@@ -168,7 +149,7 @@ public class ControllerMap {
         } else if (secondController.getStartButtonPressed()) {
             if (driverMode == "score") {
                 driverMode = "climb";
-            } else if (driverMode == "climb") {
+            } else {
                 driverMode = "score";
             }
         }
