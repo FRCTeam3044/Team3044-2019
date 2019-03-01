@@ -34,13 +34,13 @@ public class Hardware {
 
     // These may need to be changed from TalonSRX to WPI_TalonSRX
     // Intake
-    public static TalonSRX intakeArm1, intakeArm2;
-    public static TalonSRX intakeWrist;
+    public static WPI_TalonSRX intakeArm1, intakeArm2;
+    public static WPI_TalonSRX intakeWrist;
     public static TalonSRX cargoWheels;
     public static Solenoid hatchEject;
 
     // Climb
-    public static TalonSRX climbArm1, climbArm2;
+    public static WPI_TalonSRX climbArm1, climbArm2;
     public static TalonSRX climbWheels;
     public static DoubleSolenoid climbPiston1, climbPiston2;
     public static DoubleSolenoid lockPiston;
@@ -74,17 +74,17 @@ public class Hardware {
         rightBackDrive.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 10);
 
         // Intake
-        intakeArm1 = new TalonSRX(4);
-        intakeArm2 = new TalonSRX(5);
-        intakeWrist = new TalonSRX(6);
+        intakeArm1 = new WPI_TalonSRX(4);
+        intakeArm2 = new WPI_TalonSRX(5);
+        intakeWrist = new WPI_TalonSRX(6);
         cargoWheels = new TalonSRX(7);
         hatchEject = new Solenoid(6);
 
         intakeArm2.setInverted(true);
 
         // Climb
-        climbArm1 = new TalonSRX(8);
-        climbArm2 = new TalonSRX(9);
+        climbArm1 = new WPI_TalonSRX(8);
+        climbArm2 = new WPI_TalonSRX(9);
         climbWheels = new TalonSRX(10);
         climbPiston1 = new DoubleSolenoid(0, 1);
         climbPiston2 = new DoubleSolenoid(2, 3);

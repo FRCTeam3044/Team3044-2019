@@ -8,12 +8,15 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import frc.reference.FirstController;
-import edu.wpi.first.wpilibj.Solenoid;
 import frc.reference.Hardware;
-import frc.reference.SecondController;
+import frc.reference.TalonEncoderPIDSource;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.interfaces.Potentiometer;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 /**
  * Add your docs here.
@@ -52,14 +55,32 @@ public class Intake extends Hardware{
     int SHOULDER_FEEDER_CARGO;
     int WRIST_FEEDER_CARGO = calcWristPosCargo(SHOULDER_FEEDER_CARGO);
 
-    //public Intake() {
+    WPI_TalonSRX intakeArm1;
+    WPI_TalonSRX intakeWrist;
+
+    static TalonEncoderPIDSource wristPIDSource;
+    static Potentiometer pot;
+    AnalogInput ai;
+
+    double kP, kI, kD;
+    PIDController sholderPIDController;
+    PIDController wristPIDController;
+
+    public Intake() {
         /* intakeArm1 = Hardware.getInstance().intakeArm1;
         intakeArm2 = Hardware.getInstance().intakeArm2;
         intakeWrist = Hardware.getInstance().intakeWrist;
 
         cargoWheels = Hardware.getInstance().cargoWheels;
         hatchEject = Hardware.getInstance().hatchEject; */
-    //}
+        AnalogInput ai = new AnalogInput(1);
+        pot = new AnalogPotentiometer(ai, 360, 30);
+        intakeArm1 = Hardware.getInstance().intakeArm1;
+        intakeWrist = Hardware.getInstance().intakeWrist;
+        wristPIDSource = new TalonEncoderPIDSource(intakeWrist, PIDSourceType.kRate);
+        sholderPIDController = new PIDController(kP, kI, kD, pot, intakeArm1);
+        wristPIDController = new PIDController(kP, kI, kD, wristPIDSource, intakeWrist);
+    }
 
     public static Intake getInstance() {
         if (instance == null) {
@@ -120,7 +141,7 @@ public class Intake extends Hardware{
     }
 
     void shoulderTo(int position) {
-
+        sholderPIDController.setSetpoint(position);
     }
 
     void wristTo(int position) {
