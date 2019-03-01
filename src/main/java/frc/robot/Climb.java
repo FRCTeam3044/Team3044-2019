@@ -8,9 +8,13 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.reference.Hardware;
+import frc.reference.TalonEncoderPIDSource;
 
 /**
  * Add your docs here.
@@ -28,8 +32,12 @@ public class Climb extends Hardware{
     int LEVEL_TWO_MOD;
     int LEVEL_THREE;
     int LEVEL_THREE_MOD;
+    WPI_TalonSRX climbArm1;
+    static TalonEncoderPIDSource climbPIDSource;
+    double kP, kI, kD;
+    PIDController climbPIDController;
 
-    //public Climb() {
+    public Climb() {
         /* climbArm1 = Hardware.getInstance().climbArm1;
         climbArm2 = Hardware.getInstance().climbArm2;
         climbWheels = Hardware.getInstance().climbWheels;
@@ -39,7 +47,10 @@ public class Climb extends Hardware{
  */
        // Hardware.lockPiston.set(Value.kForward);
        // retract();
-    //}
+        climbArm1 = Hardware.getInstance().climbArm1;
+        climbPIDSource = new TalonEncoderPIDSource(intakeWrist, PIDSourceType.kRate);
+        climbPIDController = new PIDController(kP, kI, kD, climbPIDSource, intakeWrist);
+    }
 
     public static Climb getInstance() {
         if (instance == null) {
