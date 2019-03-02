@@ -7,12 +7,11 @@
 
 package frc.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.reference.ControllerMap;
 import frc.reference.Hardware;
+import frc.reference.SecondControllerMap;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,8 +21,10 @@ import frc.reference.Hardware;
  * project.
  */
 public class Robot extends TimedRobot {
-  public Hardware hardware = Hardware.getInstance();
-  public ControllerMap controllerMap;
+  Drive drive = new Drive();
+  Intake intake = new Intake();
+  Climb climb = new Climb();
+  SecondControllerMap secondControllerMap = new SecondControllerMap();
 
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
@@ -36,15 +37,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // Hardware.getInstance().init();
-    hardware.init();
-    controllerMap = ControllerMap.getInstance();
-    controllerMap.controllerMapInit();
+    Hardware.getInstance().init();
+
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-
-    CameraServer.getInstance().startAutomaticCapture();
   }
 
   /**
@@ -100,11 +97,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    // drive.DrivePeriodic();
-    controllerMap.controllerMapPeriodic();
-    // intake.IntakePeriodic();
-    // climb.ClimbPeriodic();
-
+    drive.DrivePeriodic();
+    secondControllerMap.secondControllerMapPeriodic();
+    intake.IntakePeriodic();
+    climb.ClimbPeriodic();
   }
 
   /**

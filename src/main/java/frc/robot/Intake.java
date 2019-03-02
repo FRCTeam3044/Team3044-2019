@@ -21,14 +21,13 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 /**
  * Add your docs here.
  */
-public class Intake extends Hardware{
-    private static Intake instance = null;
-    /* TalonSRX intakeArm1, intakeArm2;
+public class Intake {
+    TalonSRX intakeArm1, intakeArm2;
     TalonSRX intakeWrist;
     FirstController firstController;
     SecondController secondtController;
     TalonSRX cargoWheels;
-    Solenoid hatchEject; */
+    Solenoid hatchEject;
 
     int CONVERSION; // Number of pot counts per x degrees rotation. May need to be a double.
 

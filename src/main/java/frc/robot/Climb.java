@@ -19,12 +19,11 @@ import frc.reference.TalonEncoderPIDSource;
 /**
  * Add your docs here.
  */
-public class Climb extends Hardware{
-    private static Climb instance = null;
-    /*TalonSRX climbArm1, climbArm2;
+public class Climb {
+    TalonSRX climbArm1, climbArm2;
     TalonSRX climbWheels;
     DoubleSolenoid climbPiston1, climbPiston2;
-    DoubleSolenoid lockPiston;*/
+    DoubleSolenoid lockPiston;
 
     boolean pistonsExtended;
     int RETRACT;
@@ -52,11 +51,8 @@ public class Climb extends Hardware{
         climbPIDController = new PIDController(kP, kI, kD, climbPIDSource, climbArm1);
     }
 
-    public static Climb getInstance() {
-        if (instance == null) {
-            instance = new Climb();
-        }
-        return instance;
+        lockPiston.set(Value.kForward);
+        retract();
     }
 
     public void ClimbPeriodic() {
