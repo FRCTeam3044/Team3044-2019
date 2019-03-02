@@ -74,10 +74,10 @@ public class Intake extends Hardware{
         cargoWheels = Hardware.getInstance().cargoWheels;
         hatchEject = Hardware.getInstance().hatchEject; */
         AnalogInput ai = new AnalogInput(1);
-        pot = new AnalogPotentiometer(ai, 360, 30);
+        pot = new AnalogPotentiometer(ai, 270, 0);
         intakeArm1 = Hardware.getInstance().intakeArm1;
         intakeWrist = Hardware.getInstance().intakeWrist;
-        wristPIDSource = new TalonEncoderPIDSource(intakeWrist, PIDSourceType.kRate);
+        wristPIDSource = new TalonEncoderPIDSource(intakeWrist, PIDSourceType.kDisplacement);
         sholderPIDController = new PIDController(kP, kI, kD, pot, intakeArm1);
         wristPIDController = new PIDController(kP, kI, kD, wristPIDSource, intakeWrist);
     }
@@ -145,7 +145,7 @@ public class Intake extends Hardware{
     }
 
     void wristTo(int position) {
-
+        wristPIDController.setSetpoint(position);
     }
 
     void setPositions(int shoulderPosition, int wristPosition) {

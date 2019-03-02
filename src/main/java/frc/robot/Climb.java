@@ -48,8 +48,8 @@ public class Climb extends Hardware{
        // Hardware.lockPiston.set(Value.kForward);
        // retract();
         climbArm1 = Hardware.getInstance().climbArm1;
-        climbPIDSource = new TalonEncoderPIDSource(intakeWrist, PIDSourceType.kRate);
-        climbPIDController = new PIDController(kP, kI, kD, climbPIDSource, intakeWrist);
+        climbPIDSource = new TalonEncoderPIDSource(climbArm1, PIDSourceType.kDisplacement);
+        climbPIDController = new PIDController(kP, kI, kD, climbPIDSource, climbArm1);
     }
 
     public static Climb getInstance() {
@@ -125,7 +125,7 @@ public class Climb extends Hardware{
     }
 
     void armTo(int position) {
-
+        climbPIDController.setSetpoint(position);
     }
 
     public void retract() {
