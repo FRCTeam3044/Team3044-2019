@@ -104,12 +104,12 @@ public class Intake extends Hardware{
     }
 
     public void moveShoulder(double speed) {
-        intakeArm1.set(ControlMode.PercentOutput, speed);
-        intakeArm2.set(ControlMode.PercentOutput, speed); // Inverted in hardware.java
+        intakeArm1.set(ControlMode.PercentOutput, speed/3);
+        intakeArm2.set(ControlMode.PercentOutput, speed/3); // Inverted in hardware.java
     }
 
     public void moveWrist(double speed) {
-        intakeWrist.set(ControlMode.PercentOutput, speed);
+        intakeWrist.set(ControlMode.PercentOutput, speed/1.5);
     }
 
     void shoulderTo(double position) {

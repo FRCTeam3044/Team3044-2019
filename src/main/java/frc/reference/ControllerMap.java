@@ -63,8 +63,8 @@ public class ControllerMap {
     }
 
     void scoreMode() {
-        intake.moveShoulder(secondController.getY(Hand.kRight));
-        intake.moveWrist(secondController.getY(Hand.kLeft));
+        intake.moveShoulder(secondController.getY(Hand.kLeft));
+        intake.moveWrist(secondController.getY(Hand.kRight));
 
         if (secondController.getYButtonPressed()) {
             intake.hatchMode();
@@ -100,9 +100,9 @@ public class ControllerMap {
         }
 
         if (secondController.getBumper(Hand.kLeft)) {
-            intake.spinCargoWheels(.5);
+            intake.spinCargoWheels(-1);
         } else if (secondController.getTriggerAxis(Hand.kLeft) > .1) {
-            intake.spinCargoWheels(-.5);
+            intake.spinCargoWheels(1);
         } else {
             intake.spinCargoWheels(0);
         }

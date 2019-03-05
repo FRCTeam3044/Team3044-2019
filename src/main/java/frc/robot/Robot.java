@@ -7,7 +7,10 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,6 +33,12 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
+  UsbCamera intakeCam;
+  UsbCamera climberCam;
+  VideoSink server;
+
+  AnalogInput potentiometer;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -44,7 +53,12 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    CameraServer.getInstance().startAutomaticCapture();
+    intakeCam = CameraServer.getInstance().startAutomaticCapture(0);
+    climberCam = CameraServer.getInstance().startAutomaticCapture(1);
+    server = CameraServer.getInstance().addSwitchedCamera("Switched camera");
+    server.setSource(intakeCam);
+
+    potentiometer = new AnalogInput(3);
   }
 
   /**
@@ -58,6 +72,19 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    if (controllerMap.firstController.getAButtonPressed()) {
+      server.setSource(intakeCam);
+    } else if (controllerMap.firstController.getBButtonPressed()) {
+      server.setSource(climberCam);
+    }
+
+    SmartDashboard.putString("DB/String 0", ": " + ControllerMap.driverMode);
+    SmartDashboard.putString("DB/String 3",
+        "climb encoder: " + String.valueOf(Hardware.climbArm1.getSensorCollection().getQuadraturePosition()));
+    SmartDashboard.putString("DB/String 8",
+        "wrist encoder: " + String.valueOf(Hardware.intakeWrist.getSensorCollection().getQuadraturePosition()));
+    SmartDashboard.putString("DB/String 4", "pot value: " + String.valueOf(potentiometer.getValue()));
+    SmartDashboard.putString("DB/String 9", "pot voltage: " + String.valueOf(potentiometer.getVoltage()));
   }
 
   /**
@@ -92,7 +119,10 @@ public class Robot extends TimedRobot {
     default:
       // Put default auto code here
       break;
+
     }
+
+    controllerMap.controllerMapPeriodic();
   }
 
   /**

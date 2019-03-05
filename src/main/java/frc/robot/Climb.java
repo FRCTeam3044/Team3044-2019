@@ -80,13 +80,13 @@ public class Climb extends Hardware{
 
     void extendBothPistons() {
         climbPiston1.set(Value.kForward);
-        climbPiston2.set(Value.kForward);
+        climbPiston2.set(Value.kReverse);
         pistonsExtended = true;
     }
 
     void retractBothPistons() {
         climbPiston1.set(Value.kReverse);
-        climbPiston2.set(Value.kReverse);
+        climbPiston2.set(Value.kForward);
         pistonsExtended = false;
     }
 
@@ -105,8 +105,8 @@ public class Climb extends Hardware{
     }
 
     public void moveClimbingArm(double speed) {
-        climbArm1.set(ControlMode.PercentOutput, speed);
-        climbArm2.set(ControlMode.PercentOutput, speed); // Already inverted in hardware.java
+        climbArm1.set(ControlMode.PercentOutput, speed/3);
+        climbArm2.set(ControlMode.PercentOutput, speed/3); // Already inverted in hardware.java
     }
 
     public void moveClimbingWheels(double speed) {

@@ -86,6 +86,6 @@ public class Hardware {
         climbPiston2 = new DoubleSolenoid(2, 3);
         lockPiston = new DoubleSolenoid(4, 5);
 
-        climbArm2.setInverted(true);
+        climbArm1.setInverted(true);
     }
 }
