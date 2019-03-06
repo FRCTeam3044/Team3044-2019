@@ -7,6 +7,7 @@
 
 package frc.reference;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -64,6 +65,9 @@ public class Hardware {
         // Sets the back motors to follow the front motors.
         leftBackDrive.follow(leftFrontDrive);
         rightBackDrive.follow(rightFrontDrive);
+        leftFrontDrive.setInverted(true);
+        leftBackDrive.setInverted(InvertType.FollowMaster);
+        rightBackDrive.setInverted(InvertType.OpposeMaster);
 
         // Uses front talons to define motors used in WPI tank drive, the back
         // motors move because of the follower.
@@ -76,7 +80,7 @@ public class Hardware {
         cargoWheels = new TalonSRX(7);
         hatchEject = new Solenoid(6);
 
-        intakeArm2.setInverted(true);
+        intakeArm1.setInverted(true);
 
         // Climb
         climbArm1 = new TalonSRX(8);

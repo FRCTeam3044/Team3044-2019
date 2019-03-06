@@ -10,7 +10,6 @@ package frc.robot;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,8 +36,6 @@ public class Robot extends TimedRobot {
   UsbCamera climberCam;
   VideoSink server;
 
-  AnalogInput potentiometer;
-
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -47,8 +44,12 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Hardware.getInstance().init();
     hardware.init();
+
     controllerMap = ControllerMap.getInstance();
     controllerMap.controllerMapInit();
+
+    controllerMap.intake.IntakeInit();
+
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -58,7 +59,6 @@ public class Robot extends TimedRobot {
     server = CameraServer.getInstance().addSwitchedCamera("Switched camera");
     server.setSource(intakeCam);
 
-    potentiometer = new AnalogInput(3);
   }
 
   /**
@@ -83,8 +83,10 @@ public class Robot extends TimedRobot {
         "climb encoder: " + String.valueOf(Hardware.climbArm1.getSensorCollection().getQuadraturePosition()));
     SmartDashboard.putString("DB/String 8",
         "wrist encoder: " + String.valueOf(Hardware.intakeWrist.getSensorCollection().getQuadraturePosition()));
-    SmartDashboard.putString("DB/String 4", "pot value: " + String.valueOf(potentiometer.getValue()));
-    SmartDashboard.putString("DB/String 9", "pot voltage: " + String.valueOf(potentiometer.getVoltage()));
+    // SmartDashboard.putString("DB/String 4", "pot value: " +
+    // String.valueOf(intake.potentiometer.getValue()));
+    // SmartDashboard.putString("DB/String 9", "pot voltage: " +
+    // String.valueOf(intake.potentiometer.getVoltage()));
   }
 
   /**

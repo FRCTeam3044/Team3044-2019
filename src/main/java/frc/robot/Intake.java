@@ -9,17 +9,18 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import frc.reference.Hardware;
 
 /**
  * Add your docs here.
  */
-public class Intake extends Hardware{
+public class Intake extends Hardware {
     private static Intake instance = null;
-    /* TalonSRX intakeArm1, intakeArm2;
-    TalonSRX intakeWrist;
-    TalonSRX cargoWheels;
-    Solenoid hatchEject; */
+
+    AnalogInput potentiometer;
+    double startingPosition;
+    double currentPosition;
 
     double CONVERSION; // Number of pot counts per x degrees rotation. May need to be a double.
 
@@ -30,9 +31,9 @@ public class Intake extends Hardware{
     double SHOULDER_RETRACT = 0;
     double WRIST_RETRACT = 0;
 
-    double SHOULDER_GROUND_HATCHES=6.5;
-    double SHOULDER_LOW_HATCHES=6.5;
-    double SHOULDER_MEDIUM_HATCHES=80.5;
+    double SHOULDER_GROUND_HATCHES = 6.5;
+    double SHOULDER_LOW_HATCHES = 6.5;
+    double SHOULDER_MEDIUM_HATCHES = 80.5;
     double WRIST_GROUND_HATCHES = calcWristPosHatches(SHOULDER_GROUND_HATCHES);
     double WRIST_LOW_HATCHES = calcWristPosHatches(SHOULDER_LOW_HATCHES);
     double WRIST_MEDIUM_HATCHES = calcWristPosHatches(SHOULDER_MEDIUM_HATCHES);
@@ -46,14 +47,6 @@ public class Intake extends Hardware{
     double SHOULDER_FEEDER_CARGO;
     double WRIST_FEEDER_CARGO = calcWristPosCargo(SHOULDER_FEEDER_CARGO);
 
-    //public Intake() {
-        /* intakeArm1 = Hardware.getInstance().intakeArm1;
-        intakeArm2 = Hardware.getInstance().intakeArm2;
-        intakeWrist = Hardware.getInstance().intakeWrist;
-        cargoWheels = Hardware.getInstance().cargoWheels;
-        hatchEject = Hardware.getInstance().hatchEject; */
-    //}
-
     public static Intake getInstance() {
         if (instance == null) {
             instance = new Intake();
@@ -61,7 +54,14 @@ public class Intake extends Hardware{
         return instance;
     }
 
-    public void IntakePeriodic(){
+    public void IntakeInit() {
+        potentiometer = new AnalogInput(3);
+        startingPosition = potentiometer.getValue();
+        System.out.println("start " + startingPosition);
+    }
+
+    public void IntakePeriodic() {
+        currentPosition = Double.valueOf(potentiometer.getValue());
         presetPositions();
     }
 
@@ -104,12 +104,18 @@ public class Intake extends Hardware{
     }
 
     public void moveShoulder(double speed) {
-        intakeArm1.set(ControlMode.PercentOutput, speed/3);
-        intakeArm2.set(ControlMode.PercentOutput, speed/3); // Inverted in hardware.java
+        if (((potentiometer.getValue()) - startingPosition) > 1700 && speed < 0) {
+            speed = 0;
+        }
+        if (((potentiometer.getValue()) - startingPosition) < 300 && speed > 0) {
+            speed = 0;
+        }
+        intakeArm1.set(ControlMode.PercentOutput, speed / 3);
+        intakeArm2.set(ControlMode.PercentOutput, speed / 3); // Inverted in hardware.java
     }
 
     public void moveWrist(double speed) {
-        intakeWrist.set(ControlMode.PercentOutput, speed/1.5);
+        intakeWrist.set(ControlMode.PercentOutput, speed / 1.5);
     }
 
     void shoulderTo(double position) {
