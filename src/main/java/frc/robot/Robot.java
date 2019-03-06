@@ -7,106 +7,71 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.reference.Hardware;
-import frc.reference.SecondControllerMap;
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.gradle file in the
- * project.
+ * This is a sample program to demonstrate how to use a soft potentiometer and a
+ * PID controller to reach and maintain position setpoints on an elevator
+ * mechanism.
  */
 public class Robot extends TimedRobot {
-  Drive drive = new Drive();
-  Intake intake = new Intake();
-  Climb climb = new Climb();
-  SecondControllerMap secondControllerMap = new SecondControllerMap();
+  private static final int kPotChannel = 3;
+  private static final int kMotorChannel = 4;
+  private static final int kJoystickChannel = 0;
 
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  // bottom, middle, and top elevator setpoints
+  private static final double[] kSetPoints = {1.0, 2.6, 4.3};
 
-  /**
-   * This function is run when the robot is first started up and should be used
-   * for any initialization code.
-   */
+  // proportional, integral, and derivative speed constants; motor inverted
+  // DANGER: when tuning PID constants, high/inappropriate values for kP, kI,
+  // and kD may cause dangerous, uncontrollable, or undesired behavior!
+  // these may need to be positive for a non-inverted motor
+  private static final double kP = 1.0;
+  private static final double kI = 0.02;
+  private static final double kD = 2.0;
+
+  private PIDController m_pidController;
+  @SuppressWarnings("PMD.SingularField")
+  private AnalogInput m_potentiometer;
+  @SuppressWarnings("PMD.SingularField")
+  private WPI_TalonSRX m_elevatorMotor;
+  private Joystick m_joystick;
+  
+
+  private int m_index;
+  private boolean m_previousButtonValue;
+
   @Override
   public void robotInit() {
-    Hardware.getInstance().init();
+    m_potentiometer = new AnalogInput(kPotChannel);
+    m_elevatorMotor = new WPI_TalonSRX(kMotorChannel);
+    m_joystick = new Joystick(kJoystickChannel);
 
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
+    m_pidController = new PIDController(kP, kI, kD, m_potentiometer, m_elevatorMotor);
+    m_pidController.setInputRange(0, 4000);
   }
 
-  /**
-   * This function is called every robot packet, no matter the mode. Use this for
-   * items like diagnostics that you want ran during disabled, autonomous,
-   * teleoperated and test.
-   *
-   * <p>
-   * This runs after the mode specific periodic functions, but before LiveWindow
-   * and SmartDashboard integrated updating.
-   */
   @Override
-  public void robotPeriodic() {
+  public void teleopInit() {
+    m_pidController.enable();
   }
 
-  /**
-   * This autonomous (along with the chooser code above) shows how to select
-   * between different autonomous modes using the dashboard. The sendable chooser
-   * code works with the Java SmartDashboard. If you prefer the LabVIEW Dashboard,
-   * remove all of the chooser code and uncomment the getString line to get the
-   * auto name from the text box below the Gyro
-   *
-   * <p>
-   * You can add additional auto modes by adding additional comparisons to the
-   * switch structure below with additional strings. If using the SendableChooser
-   * make sure to add them to the chooser code above as well.
-   */
-  @Override
-  public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
-  }
-
-  /**
-   * This function is called periodically during autonomous.
-   */
-  @Override
-  public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-    case kCustomAuto:
-      // Put custom auto code here
-      break;
-    case kDefaultAuto:
-    default:
-      // Put default auto code here
-      break;
-    }
-  }
-
-  /**
-   * This function is called periodically during operator control.
-   */
   @Override
   public void teleopPeriodic() {
-    drive.DrivePeriodic();
-    secondControllerMap.secondControllerMapPeriodic();
-    intake.IntakePeriodic();
-    climb.ClimbPeriodic();
-  }
+    // when the button is pressed once, the selected elevator setpoint
+    // is incremented
+    boolean currentButtonValue = m_joystick.getTrigger();
+    if (currentButtonValue && !m_previousButtonValue) {
+      // index of the elevator setpoint wraps around.
+      m_index = (m_index + 1) % kSetPoints.length;
+    }
+    m_previousButtonValue = currentButtonValue;
 
-  /**
-   * This function is called periodically during test mode.
-   */
-  @Override
-  public void testPeriodic() {
+    m_pidController.setSetpoint(1000);
   }
 }
