@@ -7,13 +7,13 @@
 
 package frc.reference;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
@@ -23,29 +23,26 @@ public class Hardware {
 
     private static Hardware instance = null;
 
-    public XboxController firstController = new XboxController(0);
-    public XboxController secondController = new XboxController(1);
-
-    public Compressor compressor = new Compressor();
+    public static Compressor compressor = new Compressor();
 
     // Drive
-    WPI_TalonSRX leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive;
+    public static WPI_TalonSRX leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive;
 
     // Used to call the provided tank drive.
-    public DifferentialDrive myDrive;
+    public static DifferentialDrive myDrive;
 
     // These may need to be changed from TalonSRX to WPI_TalonSRX
     // Intake
-    public TalonSRX intakeArm1, intakeArm2;
-    public TalonSRX intakeWrist;
-    public TalonSRX cargoWheels;
-    public Solenoid hatchEject;
+    public static WPI_TalonSRX intakeArm1, intakeArm2;
+    public static WPI_TalonSRX intakeWrist;
+    public static TalonSRX cargoWheels;
+    public static Solenoid hatchEject;
 
     // Climb
-    public TalonSRX climbArm1, climbArm2;
-    public TalonSRX climbWheels;
-    public DoubleSolenoid climbPiston1, climbPiston2;
-    public DoubleSolenoid lockPiston;
+    public static WPI_TalonSRX climbArm1, climbArm2;
+    public static TalonSRX climbWheels;
+    public static DoubleSolenoid climbPiston1, climbPiston2;
+    public static DoubleSolenoid lockPiston;
 
     public static Hardware getInstance() {
         if (instance == null) {
@@ -72,24 +69,27 @@ public class Hardware {
         // Uses front talons to define motors used in WPI tank drive, the back
         // motors move because of the follower.
         myDrive = new DifferentialDrive(leftFrontDrive, rightFrontDrive);
+        leftBackDrive.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 10);
+        rightBackDrive.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 10);
 
         // Intake
-        intakeArm1 = new TalonSRX(4);
-        intakeArm2 = new TalonSRX(5);
-        intakeWrist = new TalonSRX(6);
+        intakeArm1 = new WPI_TalonSRX(4);
+        intakeArm2 = new WPI_TalonSRX(5);
+        intakeWrist = new WPI_TalonSRX(6);
         cargoWheels = new TalonSRX(7);
         hatchEject = new Solenoid(6);
 
-        intakeArm2.setInverted(true);
+        intakeArm1.setInverted(true);
 
         // Climb
-        climbArm1 = new TalonSRX(8);
-        climbArm2 = new TalonSRX(9);
+        climbArm1 = new WPI_TalonSRX(8);
+        climbArm2 = new WPI_TalonSRX(9);
         climbWheels = new TalonSRX(10);
         climbPiston1 = new DoubleSolenoid(0, 1);
         climbPiston2 = new DoubleSolenoid(2, 3);
         lockPiston = new DoubleSolenoid(4, 5);
 
-        climbArm2.setInverted(true);
+        climbArm1.setInverted(true);
+
     }
 }

@@ -8,58 +8,105 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import frc.reference.Hardware;
+import frc.reference.TalonEncoderPIDSource;
 
 /**
  * Add your docs here.
  */
-public class Intake {
-    TalonSRX intakeArm1, intakeArm2;
-    TalonSRX intakeWrist;
-    TalonSRX cargoWheels;
-    Solenoid hatchEject;
+public class Intake extends Hardware {
+    private static Intake instance = null;
 
-    int CONVERSION; // Number of pot counts per x degrees rotation. May need to be a double.
+    double CONVERSION = 1; // TODO Number of pot counts per x degrees rotation. May need to be a double.
 
     String mode; // retract, hatches, cargo
     String level; // ground, low, medium, feeder
 
     // All measurements in degrees.
-    int SHOULDER_RETRACT = 0;
-    int WRIST_RETRACT = 0;
+    double SHOULDER_RETRACT = 0;
+    double WRIST_RETRACT = 0;
 
-    int SHOULDER_GROUND_HATCHES;
-    int SHOULDER_LOW_HATCHES;
-    int SHOULDER_MEDIUM_HATCHES;
-    int WRIST_GROUND_HATCHES = calcWristPosHatches(SHOULDER_GROUND_HATCHES);
-    int WRIST_LOW_HATCHES = calcWristPosHatches(SHOULDER_LOW_HATCHES);
-    int WRIST_MEDIUM_HATCHES = calcWristPosHatches(SHOULDER_MEDIUM_HATCHES);
+    double SHOULDER_GROUND_HATCHES = 150;
+    double SHOULDER_LOW_HATCHES = 6.5;
+    double SHOULDER_MEDIUM_HATCHES = 80.5;
+    double WRIST_GROUND_HATCHES = calcWristPosHatches(SHOULDER_GROUND_HATCHES);
+    double WRIST_LOW_HATCHES = calcWristPosHatches(SHOULDER_LOW_HATCHES);
+    double WRIST_MEDIUM_HATCHES = calcWristPosHatches(SHOULDER_MEDIUM_HATCHES);
 
-    int SHOULDER_GROUND_CARGO;
-    int SHOULDER_LOW_CARGO;
-    int SHOULDER_MEDIUM_CARGO;
-    int WRIST_GROUND_CARGO = calcWristPosCargo(SHOULDER_GROUND_CARGO);
-    int WRIST_LOW_CARGO = calcWristPosCargo(SHOULDER_LOW_CARGO);
-    int WRIST_MEDIUM_CARGO = calcWristPosCargo(SHOULDER_MEDIUM_CARGO);
-    int SHOULDER_FEEDER_CARGO;
-    int WRIST_FEEDER_CARGO = calcWristPosCargo(SHOULDER_FEEDER_CARGO);
+    double SHOULDER_GROUND_CARGO;
+    double SHOULDER_LOW_CARGO;
+    double SHOULDER_MEDIUM_CARGO;
+    double WRIST_GROUND_CARGO = calcWristPosCargo(SHOULDER_GROUND_CARGO);
+    double WRIST_LOW_CARGO = calcWristPosCargo(SHOULDER_LOW_CARGO);
+    double WRIST_MEDIUM_CARGO = calcWristPosCargo(SHOULDER_MEDIUM_CARGO);
+    double SHOULDER_FEEDER_CARGO;
+    double WRIST_FEEDER_CARGO = calcWristPosCargo(SHOULDER_FEEDER_CARGO);
+
+    static TalonEncoderPIDSource wristPIDSource;
+    static Potentiometer pot;
+    AnalogInput ai;
+
+    double kP, kI, kD;
+    PIDController sholderPIDController;
+    PIDController wristPIDController;
 
     public Intake() {
-        intakeArm1 = Hardware.getInstance().intakeArm1;
-        intakeArm2 = Hardware.getInstance().intakeArm2;
-        intakeWrist = Hardware.getInstance().intakeWrist;
-        cargoWheels = Hardware.getInstance().cargoWheels;
-        hatchEject = Hardware.getInstance().hatchEject;
+        /*
+         * intakeArm1 = Hardware.getInstance().intakeArm1; intakeArm2 =
+         * Hardware.getInstance().intakeArm2; intakeWrist =
+         * Hardware.getInstance().intakeWrist;
+         * 
+         * cargoWheels = Hardware.getInstance().cargoWheels; hatchEject =
+         * Hardware.getInstance().hatchEject;
+         */
+        AnalogInput ai = new AnalogInput(3);
+        pot = new AnalogPotentiometer(ai, 270, 0);
+        kP = 1;
+        kI = 1;
+        kD = 1;
+        wristPIDSource = new TalonEncoderPIDSource(intakeWrist, PIDSourceType.kDisplacement);
+        sholderPIDController = new PIDController(kP, kI, kD, ai, intakeArm1);
+        sholderPIDController.setInputRange(0, 4000);
+
+        // wristPIDController = new PIDController(kP, kI, kD, wristPIDSource,
+        // intakeWrist);
     }
 
-    public void IntakePeriodic(){
-        presetPositions();
+    public static Intake getInstance() {
+        if (instance == null) {
+            instance = new Intake();
+        }
+        return instance;
+    }
+
+    public void IntakeInit() {
+        sholderPIDController.enable();
+    }
+
+    public void IntakePeriodic() {
+        System.out.println(sholderPIDController.isEnabled());
+        System.out.println(sholderPIDController.getSetpoint());
+        sholderPIDController.setSetpoint(1000);
+        // presetPositions();
+        /*
+         * SmartDashboard.putString("DB/String 0", String.valueOf(pot.get()));
+         * SmartDashboard.putString("DB/String 1",
+         * String.valueOf(Hardware.intakeWrist.getSensorCollection().
+         * getQuadraturePosition()));
+         */
     }
 
     void presetPositions() {
+
+        /*
+         * if (pot.get() < 150) { intakeArm1.set(ControlMode.PercentOutput, 0.4); }
+         */
         if (mode == "retract") {
             setPositions(SHOULDER_RETRACT, WRIST_RETRACT);
 
@@ -97,37 +144,37 @@ public class Intake {
         cargoWheels.set(ControlMode.PercentOutput, speed);
     }
 
-    void moveShoulder(double speed) {
-        intakeArm1.set(ControlMode.PercentOutput, speed);
-        intakeArm2.set(ControlMode.PercentOutput, speed); // Inverted in hardware.java
+    public void moveShoulder(double speed) {
+        intakeArm1.set(ControlMode.PercentOutput, speed / 3);
+        intakeArm2.set(ControlMode.PercentOutput, speed / 3); // Inverted in hardware.java
     }
 
-    void moveWrist(double speed) {
-        intakeWrist.set(ControlMode.PercentOutput, speed);
+    public void moveWrist(double speed) {
+        intakeWrist.set(ControlMode.PercentOutput, speed / 1.5);
     }
 
-    void shoulderTo(int position) {
-
+    void shoulderTo(double position) {
+        sholderPIDController.setSetpoint(150);
     }
 
-    void wristTo(int position) {
-
+    void wristTo(double position) {
+        // wristPIDController.setSetpoint(position);
     }
 
-    void setPositions(int shoulderPosition, int wristPosition) {
+    void setPositions(double shoulderPosition, double wristPosition) {
         shoulderTo(degreesToPotCounts(shoulderPosition));
         wristTo(degreesToPotCounts(wristPosition));
     }
 
-    int calcWristPosHatches(int armPositionDeg) {
+    double calcWristPosHatches(double armPositionDeg) {
         return armPositionDeg + 90;
     }
 
-    int calcWristPosCargo(int armPositionDeg) {
+    double calcWristPosCargo(double armPositionDeg) {
         return armPositionDeg;
     }
 
-    int degreesToPotCounts(int degrees) {
+    double degreesToPotCounts(double degrees) {
         return CONVERSION * degrees;
     }
 

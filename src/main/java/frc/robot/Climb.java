@@ -8,20 +8,18 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.reference.Hardware;
+import frc.reference.TalonEncoderPIDSource;
 
 /**
  * Add your docs here.
  */
-public class Climb {
-    TalonSRX climbArm1, climbArm2;
-    TalonSRX climbWheels;
-    DoubleSolenoid climbPiston1, climbPiston2;
-    DoubleSolenoid lockPiston;
+public class Climb extends Hardware {
+    private static Climb instance = null;
 
     boolean pistonsExtended;
     int RETRACT;
@@ -29,17 +27,23 @@ public class Climb {
     int LEVEL_TWO_MOD;
     int LEVEL_THREE;
     int LEVEL_THREE_MOD;
+    static TalonEncoderPIDSource climbPIDSource;
+    double kP, kI, kD;
+    PIDController climbPIDController;
 
     public Climb() {
-        climbArm1 = Hardware.getInstance().climbArm1;
-        climbArm2 = Hardware.getInstance().climbArm2;
-        climbWheels = Hardware.getInstance().climbWheels;
-        climbPiston1 = Hardware.getInstance().climbPiston1;
-        climbPiston2 = Hardware.getInstance().climbPiston2;
-        lockPiston = Hardware.getInstance().lockPiston;
 
-        lockPiston.set(Value.kForward);
-        retract();
+        // Hardware.lockPiston.set(Value.kForward);
+        // retract();
+        climbPIDSource = new TalonEncoderPIDSource(climbArm1, PIDSourceType.kDisplacement);
+        climbPIDController = new PIDController(kP, kI, kD, climbPIDSource, climbArm1);
+    }
+
+    public static Climb getInstance() {
+        if (instance == null) {
+            instance = new Climb();
+        }
+        return instance;
     }
 
     public void ClimbPeriodic() {
@@ -74,13 +78,13 @@ public class Climb {
 
     void extendBothPistons() {
         climbPiston1.set(Value.kForward);
-        climbPiston2.set(Value.kForward);
+        climbPiston2.set(Value.kReverse);
         pistonsExtended = true;
     }
 
     void retractBothPistons() {
         climbPiston1.set(Value.kReverse);
-        climbPiston2.set(Value.kReverse);
+        climbPiston2.set(Value.kForward);
         pistonsExtended = false;
     }
 
@@ -98,9 +102,9 @@ public class Climb {
         lockPiston.set(Value.kReverse);
     }
 
-    void moveClimbingArm(double speed) {
-        climbArm1.set(ControlMode.PercentOutput, speed);
-        climbArm2.set(ControlMode.PercentOutput, speed); // Already inverted in hardware.java
+    public void moveClimbingArm(double speed) {
+        climbArm1.set(ControlMode.PercentOutput, speed / 3);
+        climbArm2.set(ControlMode.PercentOutput, speed / 3); // Already inverted in hardware.java
     }
 
     public void moveClimbingWheels(double speed) {
@@ -108,7 +112,7 @@ public class Climb {
     }
 
     void armTo(int position) {
-
+        climbPIDController.setSetpoint(position);
     }
 
     public void retract() {
