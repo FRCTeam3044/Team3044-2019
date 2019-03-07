@@ -8,6 +8,7 @@
 package frc.reference;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -80,6 +81,8 @@ public class Hardware {
         hatchEject = new Solenoid(6);
 
         intakeArm1.setInverted(true);
+        intakeArm2.follow(intakeArm1);
+        intakeArm2.setInverted(InvertType.OpposeMaster);
 
         // Climb
         climbArm1 = new WPI_TalonSRX(8);
@@ -90,6 +93,5 @@ public class Hardware {
         lockPiston = new DoubleSolenoid(4, 5);
 
         climbArm1.setInverted(true);
-
     }
 }

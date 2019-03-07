@@ -74,7 +74,7 @@ public class Robot extends TimedRobot {
       server.setSource(climberCam);
     }
 
-    SmartDashboard.putString("DB/String 0", String.valueOf(controllerMap.intake.pot.get()));
+    //SmartDashboard.putString("DB/String 0", String.valueOf(controllerMap.intake.pot.get()));
     SmartDashboard.putString("DB/String 1",
         String.valueOf(Hardware.intakeWrist.getSensorCollection().getQuadraturePosition()));
 

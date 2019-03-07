@@ -10,12 +10,8 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import frc.reference.Hardware;
-import frc.reference.TalonEncoderPIDSource;
 
 /**
  * Add your docs here.
@@ -48,30 +44,23 @@ public class Intake extends Hardware {
     double SHOULDER_FEEDER_CARGO;
     double WRIST_FEEDER_CARGO = calcWristPosCargo(SHOULDER_FEEDER_CARGO);
 
-    static TalonEncoderPIDSource wristPIDSource;
-    static Potentiometer pot;
+    // static TalonEncoderPIDSource wristPIDSource;
+    // static Potentiometer pot;
     AnalogInput ai;
 
     double kP, kI, kD;
     PIDController sholderPIDController;
-    PIDController wristPIDController;
+    // PIDController wristPIDController;
 
     public Intake() {
-        /*
-         * intakeArm1 = Hardware.getInstance().intakeArm1; intakeArm2 =
-         * Hardware.getInstance().intakeArm2; intakeWrist =
-         * Hardware.getInstance().intakeWrist;
-         * 
-         * cargoWheels = Hardware.getInstance().cargoWheels; hatchEject =
-         * Hardware.getInstance().hatchEject;
-         */
-        AnalogInput ai = new AnalogInput(3);
-        pot = new AnalogPotentiometer(ai, 270, 0);
-        kP = 1;
-        kI = 1;
-        kD = 1;
-        wristPIDSource = new TalonEncoderPIDSource(intakeWrist, PIDSourceType.kDisplacement);
-        sholderPIDController = new PIDController(kP, kI, kD, ai, intakeArm1);
+        ai = new AnalogInput(3);
+        // pot = new AnalogPotentiometer(ai, 270, 0);
+        kP = -0.2;
+        // kI=.02;
+        kD = 0;
+        // wristPIDSource = new TalonEncoderPIDSource(intakeWrist,
+        // PIDSourceType.kDisplacement);
+        sholderPIDController = new PIDController(kP, kI, kD, 0, ai, intakeArm1);
         sholderPIDController.setInputRange(0, 4000);
 
         // wristPIDController = new PIDController(kP, kI, kD, wristPIDSource,
@@ -90,9 +79,9 @@ public class Intake extends Hardware {
     }
 
     public void IntakePeriodic() {
-        System.out.println(sholderPIDController.isEnabled());
-        System.out.println(sholderPIDController.getSetpoint());
-        sholderPIDController.setSetpoint(1000);
+        // System.out.println(sholderPIDController.isEnabled());
+        // System.out.println(sholderPIDController.getSetpoint());
+        sholderPIDController.setSetpoint(3);
         // presetPositions();
         /*
          * SmartDashboard.putString("DB/String 0", String.valueOf(pot.get()));
