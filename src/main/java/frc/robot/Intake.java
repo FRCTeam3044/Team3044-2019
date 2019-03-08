@@ -8,13 +8,14 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogInput;
-import frc.reference.Hardware;
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.reference.ControllerMap;
+import frc.reference.Hardware;
 
 /**
  * Add your docs here.
@@ -27,6 +28,7 @@ public class Intake extends Hardware {
     // double currentPosition;
     double kP, kI, kD;
     PIDController sholderPIDController;
+    double currentSetpoint;
 
     double CONVERSION; // Number of pot counts per x degrees rotation. May need to be a double.
 
@@ -65,28 +67,31 @@ public class Intake extends Hardware {
         startingPosition = potentiometer.getValue();
         System.out.println("start " + startingPosition);
 
-        kP = -0.2;
+        kP = 0.2;
         kI = 0.0;
         kD = 0;
+        currentSetpoint = .5;
         // wristPIDSource = new TalonEncoderPIDSource(intakeWrist,
         // PIDSourceType.kDisplacement);
-        sholderPIDController = new PIDController(kP, kI, kD, 0, potentiometer, new WPI_TalonSRX(20));
+        sholderPIDController = new PIDController(kP, kI, kD, 0, potentiometer, intakeArm1);
         sholderPIDController.setInputRange(0, 5);
 
         // wristPIDController = new PIDController(kP, kI, kD, wristPIDSource,
         // intakeWrist);
 
-        sholderPIDController.disable(); //TODO
+        sholderPIDController.enable(); // TODO
     }
 
     public void IntakePeriodic() {
         // currentPosition = Double.valueOf(potentiometer.getValue());
         presetPositions();
+        SmartDashboard.putString("DB/String 4", "pot value: " + String.valueOf(potentiometer.getVoltage()));
     }
 
     void presetPositions() {
         if (mode != "retract") {
-            sholderPIDController.disable();//TODO
+            sholderPIDController.enable();// TODO
+            currentSetpoint += .0000002 * ControllerMap.getInstance().secondController.getY(Hand.kLeft);
         }
 
         if (mode == "retract") {
@@ -95,13 +100,13 @@ public class Intake extends Hardware {
 
         } else if (mode == "hatches") {
             if (level == "ground") {
-                sholderPIDController.setSetpoint(1);
+                sholderPIDController.setSetpoint(currentSetpoint);
                 // setPositions(SHOULDER_GROUND_HATCHES, WRIST_GROUND_HATCHES);
             } else if (level == "low") {
                 sholderPIDController.setSetpoint(2);
                 // setPositions(SHOULDER_LOW_HATCHES, WRIST_LOW_HATCHES);
             } else if (level == "medium") {
-                sholderPIDController.setSetpoint(3);
+                sholderPIDController.setSetpoint(-4);
                 // setPositions(SHOULDER_MEDIUM_HATCHES, WRIST_MEDIUM_HATCHES);
             }
 
@@ -135,12 +140,11 @@ public class Intake extends Hardware {
     }
 
     public void moveShoulder(double speed) {
-       /*  if (((potentiometer.getValue()) - startingPosition) > 1700 && speed < 0) {
-            speed = 0;
-        }
-        if (((potentiometer.getValue()) - startingPosition) < 300 && speed > 0) {
-            speed = 0;
-        } */
+        /*
+         * if (((potentiometer.getValue()) - startingPosition) > 1700 && speed < 0) {
+         * speed = 0; } if (((potentiometer.getValue()) - startingPosition) < 300 &&
+         * speed > 0) { speed = 0; }
+         */
         intakeArm1.set(ControlMode.PercentOutput, speed / 3);
     }
 
