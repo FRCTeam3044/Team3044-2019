@@ -8,7 +8,6 @@
 package frc.robot;
 
 import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -34,7 +33,6 @@ public class Robot extends TimedRobot {
 
   UsbCamera intakeCam;
   UsbCamera climberCam;
-  VideoSink server;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -56,8 +54,6 @@ public class Robot extends TimedRobot {
 
     intakeCam = CameraServer.getInstance().startAutomaticCapture(0);
     climberCam = CameraServer.getInstance().startAutomaticCapture(1);
-    server = CameraServer.getInstance().addSwitchedCamera("Switched camera");
-    server.setSource(intakeCam);
 
   }
 
@@ -72,11 +68,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    if (controllerMap.firstController.getAButtonPressed()) {
-      server.setSource(intakeCam);
-    } else if (controllerMap.firstController.getBButtonPressed()) {
-      server.setSource(climberCam);
-    }
 
     SmartDashboard.putString("DB/String 0", ": " + ControllerMap.driverMode);
     SmartDashboard.putString("DB/String 3",

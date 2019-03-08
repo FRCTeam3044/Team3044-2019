@@ -63,7 +63,7 @@ public class ControllerMap {
     }
 
     void scoreMode() {
-        intake.moveShoulder(secondController.getY(Hand.kLeft));
+        //intake.moveShoulder(secondController.getY(Hand.kLeft));
         intake.moveWrist(secondController.getY(Hand.kRight));
 
         if (secondController.getYButtonPressed()) {

@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import frc.reference.Hardware;
+import edu.wpi.first.wpilibj.PIDController;
 
 /**
  * Add your docs here.
@@ -21,6 +22,8 @@ public class Intake extends Hardware {
     AnalogInput potentiometer;
     double startingPosition;
     double currentPosition;
+    double kP, kI, kD;
+    PIDController sholderPIDController;
 
     double CONVERSION; // Number of pot counts per x degrees rotation. May need to be a double.
 
@@ -58,6 +61,19 @@ public class Intake extends Hardware {
         potentiometer = new AnalogInput(3);
         startingPosition = potentiometer.getValue();
         System.out.println("start " + startingPosition);
+
+        kP = -0.2;
+        kI = 0.0;
+        kD = 0;
+        // wristPIDSource = new TalonEncoderPIDSource(intakeWrist,
+        // PIDSourceType.kDisplacement);
+        sholderPIDController = new PIDController(kP, kI, kD, 0, potentiometer, intakeArm1);
+        sholderPIDController.setInputRange(0, 5);
+
+        // wristPIDController = new PIDController(kP, kI, kD, wristPIDSource,
+        // intakeWrist);
+
+        sholderPIDController.enable();
     }
 
     public void IntakePeriodic() {
@@ -71,22 +87,29 @@ public class Intake extends Hardware {
 
         } else if (mode == "hatches") {
             if (level == "ground") {
-                setPositions(SHOULDER_GROUND_HATCHES, WRIST_GROUND_HATCHES);
+                sholderPIDController.setSetpoint(1);
+                // setPositions(SHOULDER_GROUND_HATCHES, WRIST_GROUND_HATCHES);
             } else if (level == "low") {
-                setPositions(SHOULDER_LOW_HATCHES, WRIST_LOW_HATCHES);
+                sholderPIDController.setSetpoint(2);
+                // setPositions(SHOULDER_LOW_HATCHES, WRIST_LOW_HATCHES);
             } else if (level == "medium") {
-                setPositions(SHOULDER_MEDIUM_HATCHES, WRIST_MEDIUM_HATCHES);
+                sholderPIDController.setSetpoint(3);
+                // setPositions(SHOULDER_MEDIUM_HATCHES, WRIST_MEDIUM_HATCHES);
             }
 
         } else if (mode == "cargo") {
             if (level == "ground") {
-                setPositions(SHOULDER_GROUND_CARGO, WRIST_GROUND_CARGO);
+                sholderPIDController.setSetpoint(1);
+                // setPositions(SHOULDER_GROUND_CARGO, WRIST_GROUND_CARGO);
             } else if (level == "low") {
-                setPositions(SHOULDER_LOW_CARGO, WRIST_LOW_CARGO);
+                sholderPIDController.setSetpoint(2);
+                // setPositions(SHOULDER_LOW_CARGO, WRIST_LOW_CARGO);
             } else if (level == "medium") {
-                setPositions(SHOULDER_MEDIUM_CARGO, WRIST_MEDIUM_CARGO);
+                sholderPIDController.setSetpoint(3);
+                // setPositions(SHOULDER_MEDIUM_CARGO, WRIST_MEDIUM_CARGO);
             } else if (level == "feeder") {
-                setPositions(SHOULDER_FEEDER_CARGO, WRIST_FEEDER_CARGO);
+                sholderPIDController.setSetpoint(2);
+                // setPositions(SHOULDER_FEEDER_CARGO, WRIST_FEEDER_CARGO);
             }
         }
     }

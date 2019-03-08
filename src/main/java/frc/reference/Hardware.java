@@ -33,7 +33,7 @@ public class Hardware {
 
     // These may need to be changed from TalonSRX to WPI_TalonSRX
     // Intake
-    public static TalonSRX intakeArm1, intakeArm2;
+    public static WPI_TalonSRX intakeArm1, intakeArm2;
     public static TalonSRX intakeWrist;
     public static TalonSRX cargoWheels;
     public static Solenoid hatchEject;
@@ -74,13 +74,15 @@ public class Hardware {
         myDrive = new DifferentialDrive(leftFrontDrive, rightFrontDrive);
 
         // Intake
-        intakeArm1 = new TalonSRX(4);
-        intakeArm2 = new TalonSRX(5);
+        intakeArm1 = new WPI_TalonSRX(4);
+        intakeArm2 = new WPI_TalonSRX(5);
         intakeWrist = new TalonSRX(6);
         cargoWheels = new TalonSRX(7);
         hatchEject = new Solenoid(6);
 
         intakeArm1.setInverted(true);
+        intakeArm2.follow(intakeArm1);
+        intakeArm2.setInverted(InvertType.OpposeMaster);
 
         // Climb
         climbArm1 = new TalonSRX(8);
