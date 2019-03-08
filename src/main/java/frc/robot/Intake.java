@@ -8,10 +8,13 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import frc.reference.Hardware;
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 /**
  * Add your docs here.
@@ -21,7 +24,7 @@ public class Intake extends Hardware {
 
     AnalogInput potentiometer;
     double startingPosition;
-    double currentPosition;
+    // double currentPosition;
     double kP, kI, kD;
     PIDController sholderPIDController;
 
@@ -67,23 +70,28 @@ public class Intake extends Hardware {
         kD = 0;
         // wristPIDSource = new TalonEncoderPIDSource(intakeWrist,
         // PIDSourceType.kDisplacement);
-        sholderPIDController = new PIDController(kP, kI, kD, 0, potentiometer, intakeArm1);
+        sholderPIDController = new PIDController(kP, kI, kD, 0, potentiometer, new WPI_TalonSRX(20));
         sholderPIDController.setInputRange(0, 5);
 
         // wristPIDController = new PIDController(kP, kI, kD, wristPIDSource,
         // intakeWrist);
 
-        sholderPIDController.enable();
+        sholderPIDController.disable(); //TODO
     }
 
     public void IntakePeriodic() {
-        currentPosition = Double.valueOf(potentiometer.getValue());
+        // currentPosition = Double.valueOf(potentiometer.getValue());
         presetPositions();
     }
 
     void presetPositions() {
+        if (mode != "retract") {
+            sholderPIDController.disable();//TODO
+        }
+
         if (mode == "retract") {
-            setPositions(SHOULDER_RETRACT, WRIST_RETRACT);
+            // setPositions(SHOULDER_RETRACT, WRIST_RETRACT);
+            sholderPIDController.disable();
 
         } else if (mode == "hatches") {
             if (level == "ground") {
@@ -116,9 +124,9 @@ public class Intake extends Hardware {
 
     public void ejectHatch(boolean button) {
         if (button) {
-            hatchEject.set(true);
+            hatchEject.set(Value.kForward);
         } else {
-            hatchEject.set(false);
+            hatchEject.set(Value.kReverse);
         }
     }
 
@@ -127,14 +135,13 @@ public class Intake extends Hardware {
     }
 
     public void moveShoulder(double speed) {
-        if (((potentiometer.getValue()) - startingPosition) > 1700 && speed < 0) {
+       /*  if (((potentiometer.getValue()) - startingPosition) > 1700 && speed < 0) {
             speed = 0;
         }
         if (((potentiometer.getValue()) - startingPosition) < 300 && speed > 0) {
             speed = 0;
-        }
+        } */
         intakeArm1.set(ControlMode.PercentOutput, speed / 3);
-        intakeArm2.set(ControlMode.PercentOutput, speed / 3); // Inverted in hardware.java
     }
 
     public void moveWrist(double speed) {

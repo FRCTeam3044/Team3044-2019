@@ -15,12 +15,8 @@ import frc.reference.Hardware;
 /**
  * Add your docs here.
  */
-public class Climb extends Hardware{
+public class Climb extends Hardware {
     private static Climb instance = null;
-    /*TalonSRX climbArm1, climbArm2;
-    TalonSRX climbWheels;
-    DoubleSolenoid climbPiston1, climbPiston2;
-    DoubleSolenoid lockPiston;*/
 
     boolean pistonsExtended;
     int RETRACT;
@@ -29,17 +25,8 @@ public class Climb extends Hardware{
     int LEVEL_THREE;
     int LEVEL_THREE_MOD;
 
-    //public Climb() {
-        /* climbArm1 = Hardware.getInstance().climbArm1;
-        climbArm2 = Hardware.getInstance().climbArm2;
-        climbWheels = Hardware.getInstance().climbWheels;
-        climbPiston1 = Hardware.getInstance().climbPiston1;
-        climbPiston2 = Hardware.getInstance().climbPiston2;
-        lockPiston = Hardware.getInstance().lockPiston;
- */
-       // Hardware.lockPiston.set(Value.kForward);
-       // retract();
-    //}
+    // public Climb() {
+    // }
 
     public static Climb getInstance() {
         if (instance == null) {
@@ -80,13 +67,13 @@ public class Climb extends Hardware{
 
     void extendBothPistons() {
         climbPiston1.set(Value.kForward);
-        climbPiston2.set(Value.kReverse);
+        climbPiston2.set(Value.kForward);
         pistonsExtended = true;
     }
 
     void retractBothPistons() {
         climbPiston1.set(Value.kReverse);
-        climbPiston2.set(Value.kForward);
+        climbPiston2.set(Value.kReverse);
         pistonsExtended = false;
     }
 
@@ -100,13 +87,9 @@ public class Climb extends Hardware{
         return true;
     }
 
-    void unlock() {
-        lockPiston.set(Value.kReverse);
-    }
-
     public void moveClimbingArm(double speed) {
-        climbArm1.set(ControlMode.PercentOutput, speed/3);
-        climbArm2.set(ControlMode.PercentOutput, speed/3); // Already inverted in hardware.java
+        climbArm1.set(ControlMode.PercentOutput, speed / 3);
+        climbArm2.set(ControlMode.PercentOutput, speed / 3); // Already inverted in hardware.java
     }
 
     public void moveClimbingWheels(double speed) {
@@ -122,7 +105,6 @@ public class Climb extends Hardware{
     }
 
     public void levelTwo() {
-        unlock();
         if (!pistonsExtended) {
             armTo(LEVEL_TWO);
         } else {
@@ -131,7 +113,6 @@ public class Climb extends Hardware{
     }
 
     public void levelThree() {
-        unlock();
         if (!pistonsExtended) {
             armTo(LEVEL_THREE);
         } else {

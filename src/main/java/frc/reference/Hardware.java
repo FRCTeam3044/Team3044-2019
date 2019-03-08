@@ -36,13 +36,12 @@ public class Hardware {
     public static WPI_TalonSRX intakeArm1, intakeArm2;
     public static TalonSRX intakeWrist;
     public static TalonSRX cargoWheels;
-    public static Solenoid hatchEject;
+    public static DoubleSolenoid hatchEject;
 
     // Climb
     public static TalonSRX climbArm1, climbArm2;
     public static TalonSRX climbWheels;
     public static DoubleSolenoid climbPiston1, climbPiston2;
-    public static DoubleSolenoid lockPiston;
 
     public static Hardware getInstance() {
         if (instance == null) {
@@ -66,8 +65,9 @@ public class Hardware {
         leftBackDrive.follow(leftFrontDrive);
         rightBackDrive.follow(rightFrontDrive);
         leftFrontDrive.setInverted(true);
+        rightFrontDrive.setInverted(true);
         leftBackDrive.setInverted(InvertType.FollowMaster);
-        rightBackDrive.setInverted(InvertType.OpposeMaster);
+        rightBackDrive.setInverted(InvertType.FollowMaster);
 
         // Uses front talons to define motors used in WPI tank drive, the back
         // motors move because of the follower.
@@ -78,9 +78,9 @@ public class Hardware {
         intakeArm2 = new WPI_TalonSRX(5);
         intakeWrist = new TalonSRX(6);
         cargoWheels = new TalonSRX(7);
-        hatchEject = new Solenoid(6);
+        hatchEject = new DoubleSolenoid(6,4);
 
-        intakeArm1.setInverted(true);
+        intakeArm1.setInverted(false);
         intakeArm2.follow(intakeArm1);
         intakeArm2.setInverted(InvertType.OpposeMaster);
 
@@ -90,8 +90,27 @@ public class Hardware {
         climbWheels = new TalonSRX(10);
         climbPiston1 = new DoubleSolenoid(0, 1);
         climbPiston2 = new DoubleSolenoid(2, 3);
-        lockPiston = new DoubleSolenoid(4, 5);
 
-        climbArm1.setInverted(true);
+        climbArm2.setInverted(true);
+
+        // --------------------------------
+        // --------------------------------
+        // --------------------------------
+
+        leftFrontDrive.configNeutralDeadband(.04);
+        rightFrontDrive.configNeutralDeadband(.04);
+        leftBackDrive.configNeutralDeadband(.04);
+        rightBackDrive.configNeutralDeadband(.04);
+
+        intakeArm1.configNeutralDeadband(.04);
+        intakeArm2.configNeutralDeadband(.04);
+        intakeWrist.configNeutralDeadband(.04);
+        cargoWheels.configNeutralDeadband(.04);
+
+        // Climb
+        climbArm1.configNeutralDeadband(.04);
+        climbArm2.configNeutralDeadband(.04);
+        climbWheels.configNeutralDeadband(.04);
+
     }
 }
