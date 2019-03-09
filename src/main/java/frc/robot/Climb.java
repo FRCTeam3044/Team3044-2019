@@ -71,7 +71,7 @@ public class Climb extends Hardware {
         pistonsExtended = true;
     }
 
-    void retractBothPistons() {
+    public void retractBothPistons() {
         climbPiston1.set(Value.kReverse);
         climbPiston2.set(Value.kReverse);
         pistonsExtended = false;

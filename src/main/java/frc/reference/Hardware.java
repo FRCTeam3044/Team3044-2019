@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.Climb;
 
 /**
  * Add your docs here.
@@ -77,7 +78,7 @@ public class Hardware {
         intakeArm2 = new WPI_TalonSRX(5);
         intakeWrist = new TalonSRX(6);
         cargoWheels = new TalonSRX(7);
-        hatchEject = new DoubleSolenoid(6,4);
+        hatchEject = new DoubleSolenoid(6, 4);
 
         intakeArm1.setInverted(false);
         intakeArm2.follow(intakeArm1);
@@ -91,6 +92,7 @@ public class Hardware {
         climbPiston2 = new DoubleSolenoid(2, 3);
 
         climbArm2.setInverted(true);
+        Climb.getInstance().retractBothPistons();
 
         // --------------------------------
         // --------------------------------

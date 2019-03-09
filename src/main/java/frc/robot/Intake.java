@@ -29,10 +29,11 @@ public class Intake extends Hardware {
     double kP, kI, kD;
     PIDController sholderPIDController;
     double currentSetpoint;
+    boolean PIDenabled = true;
 
     double CONVERSION; // Number of pot counts per x degrees rotation. May need to be a double.
 
-    String mode; // retract, hatches, cargo
+    String mode = "retract"; // retract, hatches, cargo
     String level; // ground, low, medium, feeder
 
     // All measurements in degrees.
@@ -67,10 +68,10 @@ public class Intake extends Hardware {
         startingPosition = potentiometer.getValue();
         System.out.println("start " + startingPosition);
 
-        kP = 0.2;
+        kP = 0.3;
         kI = 0.0;
         kD = 0;
-        currentSetpoint = .5;
+        currentSetpoint = 2;
         // wristPIDSource = new TalonEncoderPIDSource(intakeWrist,
         // PIDSourceType.kDisplacement);
         sholderPIDController = new PIDController(kP, kI, kD, 0, potentiometer, intakeArm1);
@@ -79,31 +80,45 @@ public class Intake extends Hardware {
         // wristPIDController = new PIDController(kP, kI, kD, wristPIDSource,
         // intakeWrist);
 
-        sholderPIDController.enable(); // TODO
+        // sholderPIDController.enable();
+        // TODO
+
     }
 
     public void IntakePeriodic() {
         // currentPosition = Double.valueOf(potentiometer.getValue());
-        presetPositions();
+        if (PIDenabled) {
+            presetPositions();
+        } else {
+            moveShoulder(ControllerMap.getInstance().secondController.getY(Hand.kLeft));
+        }
+
+        if (mode != "retract") {
+            PIDenabled = true;
+        }
         SmartDashboard.putString("DB/String 4", "pot value: " + String.valueOf(potentiometer.getVoltage()));
+        SmartDashboard.putString("DB/String 9", "setpoint: " + Double.toString(currentSetpoint));
     }
 
     void presetPositions() {
         if (mode != "retract") {
             sholderPIDController.enable();// TODO
-            currentSetpoint += .0000002 * ControllerMap.getInstance().secondController.getY(Hand.kLeft);
+            PIDenabled = true;
+            currentSetpoint += .02 * ControllerMap.getInstance().secondController.getY(Hand.kLeft);
         }
 
         if (mode == "retract") {
             // setPositions(SHOULDER_RETRACT, WRIST_RETRACT);
             sholderPIDController.disable();
+            PIDenabled = false;
 
         } else if (mode == "hatches") {
             if (level == "ground") {
+                currentSetpoint = 2;
                 sholderPIDController.setSetpoint(currentSetpoint);
                 // setPositions(SHOULDER_GROUND_HATCHES, WRIST_GROUND_HATCHES);
             } else if (level == "low") {
-                sholderPIDController.setSetpoint(2);
+                sholderPIDController.setSetpoint(1);
                 // setPositions(SHOULDER_LOW_HATCHES, WRIST_LOW_HATCHES);
             } else if (level == "medium") {
                 sholderPIDController.setSetpoint(-4);

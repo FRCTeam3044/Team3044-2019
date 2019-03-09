@@ -55,6 +55,8 @@ public class Robot extends TimedRobot {
     intakeCam = CameraServer.getInstance().startAutomaticCapture(0);
     climberCam = CameraServer.getInstance().startAutomaticCapture(1);
 
+    Intake.getInstance().mode = "retract";
+
   }
 
   /**
