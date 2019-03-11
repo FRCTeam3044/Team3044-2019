@@ -59,10 +59,11 @@ public class ControllerMap {
             drive.driveTheBot(firstController.getY(Hand.kLeft), firstController.getY(Hand.kRight));
         }
 
-        intake.IntakePeriodic();
     }
 
     void scoreMode() {
+        intake.IntakePeriodic();
+
         // intake.moveShoulder(secondController.getY(Hand.kLeft));
         intake.moveWrist(secondController.getY(Hand.kRight));
 
