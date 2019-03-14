@@ -7,30 +7,43 @@
 
 package frc.reference;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.Climb;
 import frc.robot.Drive;
 import frc.robot.Intake;
+import edu.wpi.first.wpilibj.XboxController;
 
 /**
  * Add your docs here.
  */
-public class SecondControllerMap {
-    XboxController secondController;
-    XboxController firstController;
-    public String driverMode; // score, climb, failure
+public class ControllerMap {
+    private static ControllerMap instance = null;
 
-    Intake intake = new Intake();
-    Climb climb = new Climb();
-    Drive drive = new Drive();
+    public Drive drive = Drive.getInstance();
+    public Intake intake = Intake.getInstance();
+    public Climb climb = Climb.getInstance();
 
-    public SecondControllerMap() {
-        secondController = Hardware.getInstance().secondController;
-        firstController = Hardware.getInstance().firstController;
+    public XboxController firstController = new XboxController(0);
+    public XboxController secondController = new XboxController(1);
+
+    public static String driverMode; // score, climb, failureFirst, failureSecond
+
+    /*
+     * public ControllerMap() { }
+     */
+
+    public static ControllerMap getInstance() {
+        if (instance == null) {
+            instance = new ControllerMap();
+        }
+        return instance;
     }
 
-    public void secondControllerMapPeriodic() {
+    public void controllerMapInit() {
+        driverMode = "score";
+    }
+
+    public void controllerMapPeriodic() {
         switchMode();
         if (driverMode == "score") {
             scoreMode();
@@ -41,9 +54,19 @@ public class SecondControllerMap {
         } else if (driverMode == "failureFirst") {
             failureMode(firstController);
         }
+
+        if (driverMode != "failureFirst" && driverMode != "failureSecond") {
+            drive.driveTheBot(firstController.getY(Hand.kLeft), firstController.getY(Hand.kRight));
+        }
+
     }
 
     void scoreMode() {
+        intake.IntakePeriodic();
+
+        // intake.moveShoulder(secondController.getY(Hand.kLeft));
+        intake.moveWrist(secondController.getY(Hand.kRight));
+
         if (secondController.getYButtonPressed()) {
             intake.hatchMode();
             intake.goMedium();
@@ -78,16 +101,20 @@ public class SecondControllerMap {
         }
 
         if (secondController.getBumper(Hand.kLeft)) {
-            intake.spinCargoWheels(.5);
-        }
-        if (secondController.getTriggerAxis(Hand.kLeft) > .1) {
-            intake.spinCargoWheels(-.5);
+            intake.spinCargoWheels(-1);
+        } else if (secondController.getTriggerAxis(Hand.kLeft) > .1) {
+            intake.spinCargoWheels(1);
+        } else {
+            intake.spinCargoWheels(0);
         }
 
         intake.ejectHatch(secondController.getBumper(Hand.kRight));
     }
 
     void climbMode() {
+        climb.moveClimbingArm(secondController.getY(Hand.kRight));
+        climb.moveClimbingWheels(secondController.getY(Hand.kLeft));
+
         if (secondController.getTriggerAxis(Hand.kLeft) > .1) {
             climb.habPistonLift(2);
         }
@@ -143,13 +170,13 @@ public class SecondControllerMap {
 
     void switchMode() {
         if (secondController.getBackButton() && secondController.getStartButton()) {
-            driverMode = "failureSecond";
+            // driverMode = "failureSecond";
         } else if (firstController.getBackButton() && firstController.getStartButton()) {
-            driverMode = "failureFirst";
-        } else if (secondController.getStartButtonPressed()) {
+            // driverMode = "failureFirst";
+        } else if (secondController.getBackButtonPressed()) {
             if (driverMode == "score") {
                 driverMode = "climb";
-            } else {
+            } else if (driverMode == "climb") {
                 driverMode = "score";
             }
         }

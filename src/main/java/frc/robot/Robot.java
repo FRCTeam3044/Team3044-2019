@@ -7,11 +7,13 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.reference.ControllerMap;
 import frc.reference.Hardware;
-import frc.reference.SecondControllerMap;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,15 +23,16 @@ import frc.reference.SecondControllerMap;
  * project.
  */
 public class Robot extends TimedRobot {
-  Drive drive = new Drive();
-  Intake intake = new Intake();
-  Climb climb = new Climb();
-  SecondControllerMap secondControllerMap = new SecondControllerMap();
+  public Hardware hardware = Hardware.getInstance();
+  public ControllerMap controllerMap;
 
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+  UsbCamera intakeCam;
+  UsbCamera climberCam;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -37,11 +40,23 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    Hardware.getInstance().init();
+    // Hardware.getInstance().init();
+    hardware.init();
+
+    controllerMap = ControllerMap.getInstance();
+    controllerMap.controllerMapInit();
+
+    controllerMap.intake.IntakeInit();
 
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+
+    intakeCam = CameraServer.getInstance().startAutomaticCapture(0);
+    climberCam = CameraServer.getInstance().startAutomaticCapture(1);
+
+    Intake.getInstance().mode = "retract";
+
   }
 
   /**
@@ -55,6 +70,16 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+
+    SmartDashboard.putString("DB/String 0", ": " + ControllerMap.driverMode);
+    SmartDashboard.putString("DB/String 3",
+        "climb encoder: " + String.valueOf(Hardware.climbArm1.getSensorCollection().getQuadraturePosition()));
+    SmartDashboard.putString("DB/String 8",
+        "wrist encoder: " + String.valueOf(Hardware.intakeWrist.getSensorCollection().getQuadraturePosition()));
+    // SmartDashboard.putString("DB/String 4", "pot value: " +
+    // String.valueOf(intake.potentiometer.getValue()));
+    // SmartDashboard.putString("DB/String 9", "pot voltage: " +
+    // String.valueOf(intake.potentiometer.getVoltage()));
   }
 
   /**
@@ -89,7 +114,10 @@ public class Robot extends TimedRobot {
     default:
       // Put default auto code here
       break;
+
     }
+
+    controllerMap.controllerMapPeriodic();
   }
 
   /**
@@ -97,10 +125,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    drive.DrivePeriodic();
-    secondControllerMap.secondControllerMapPeriodic();
-    intake.IntakePeriodic();
-    climb.ClimbPeriodic();
+    // drive.DrivePeriodic();
+    controllerMap.controllerMapPeriodic();
+    // intake.IntakePeriodic();
+    // climb.ClimbPeriodic();
+
   }
 
   /**

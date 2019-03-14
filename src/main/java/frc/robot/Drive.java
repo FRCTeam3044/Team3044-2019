@@ -7,29 +7,29 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.reference.Hardware;
-import frc.reference.SecondControllerMap;
 
 /**
  * Add your docs here.
  */
-public class Drive {
-    DifferentialDrive myDrive;
-    XboxController firstController = Hardware.getInstance().firstController;
-    SecondControllerMap secondControllerMap = new SecondControllerMap();
+public class Drive extends Hardware{
+    private static Drive instance = null;
+    //DifferentialDrive myDrive;
+   // XboxController firstController = Hardware.getInstance().firstController;
+    //SecondControllerMap secondControllerMap = new SecondControllerMap();
 
-    public Drive() {
-        myDrive = Hardware.getInstance().myDrive;
+    public static Drive getInstance() {
+        if (instance == null) {
+            instance = new Drive();
+        }
+        return instance;
     }
 
-    public void DrivePeriodic() {
-        if (secondControllerMap.driverMode != "failure") {
+    /* public void DrivePeriodic() {
+        if (SecondControllerMap.driverMode != "failure") {
             driveTheBot(firstController.getY(Hand.kLeft), firstController.getY(Hand.kRight));
         }
-    }
+    } */
 
     /**
      * Tank drive method that can be called anywhere. It calls upon the differential
