@@ -59,13 +59,17 @@ public class ControllerMap {
             drive.driveTheBot(firstController.getY(Hand.kLeft), firstController.getY(Hand.kRight));
         }
 
+        if (firstController.getAButtonPressed() && driverMode != "failureFirst" && driverMode != "failureSecond") {
+            Intake.intakeWrist.setSelectedSensorPosition(0);
+        }
+
     }
 
     void scoreMode() {
         intake.IntakePeriodic();
 
         // intake.moveShoulder(secondController.getY(Hand.kLeft));
-        intake.moveWrist(secondController.getY(Hand.kRight));
+        // intake.moveWrist(secondController.getY(Hand.kRight));
 
         if (secondController.getYButtonPressed()) {
             intake.hatchMode();
