@@ -59,8 +59,8 @@ public class ControllerMap {
             drive.driveTheBot(firstController.getY(Hand.kLeft), firstController.getY(Hand.kRight));
         }
 
-        if (firstController.getAButtonPressed() && driverMode != "failureFirst" && driverMode != "failureSecond") {
-            Intake.intakeWrist.setSelectedSensorPosition(0);
+        if (firstController.getAButton()) {
+            Hardware.intakeWrist.setSelectedSensorPosition(0,0,0);
         }
 
     }
@@ -125,7 +125,7 @@ public class ControllerMap {
         if (secondController.getTriggerAxis(Hand.kRight) > .1) {
             climb.habPistonLift(3);
         }
-        if (secondController.getBumperPressed(Hand.kLeft)) {
+        if (secondController.getBumperPressed(Hand.kRight)) {
             climb.habPistonLift(0);
         }
         if (secondController.getBButtonPressed()) {

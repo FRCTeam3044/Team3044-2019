@@ -51,7 +51,7 @@ public class Hardware {
     }
 
     public void init() {
-        compressor.setClosedLoopControl(false);
+        compressor.setClosedLoopControl(true);
         // compressor.stop(); //Use this to stop the compressor.
         // time = DriverStation.getInstance().getMatchTime(); //Maybe stop
         // compressor in last 15 seconds.
@@ -88,8 +88,8 @@ public class Hardware {
         climbArm1 = new TalonSRX(8);
         climbArm2 = new TalonSRX(9);
         climbWheels = new TalonSRX(10);
-        climbPiston1 = new DoubleSolenoid(0, 1);
-        climbPiston2 = new DoubleSolenoid(2, 3);
+        climbPiston1 = new DoubleSolenoid(1,0);
+        climbPiston2 = new DoubleSolenoid(3,2);
 
         climbArm2.setInverted(true);
         Climb.getInstance().retractBothPistons();

@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   UsbCamera intakeCam;
-  UsbCamera climberCam;
+  //UsbCamera climberCam;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     intakeCam = CameraServer.getInstance().startAutomaticCapture(0);
-    climberCam = CameraServer.getInstance().startAutomaticCapture(1);
+    //climberCam = CameraServer.getInstance().startAutomaticCapture(1);
 
     Intake.getInstance().mode = "retract";
 
@@ -72,8 +72,6 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
 
     SmartDashboard.putString("DB/String 0", ": " + ControllerMap.driverMode);
-    SmartDashboard.putString("DB/String 3",
-        "climb encoder: " + String.valueOf(Hardware.climbArm1.getSensorCollection().getQuadraturePosition()));
     SmartDashboard.putString("DB/String 8",
         "wrist encoder: " + String.valueOf(Hardware.intakeWrist.getSensorCollection().getQuadraturePosition()));
     // SmartDashboard.putString("DB/String 4", "pot value: " +
