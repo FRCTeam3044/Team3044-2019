@@ -71,6 +71,7 @@ public class ControllerMap {
         // intake.moveShoulder(secondController.getY(Hand.kLeft));
         // intake.moveWrist(secondController.getY(Hand.kRight));
 
+        // Actually does cargo.
         if (secondController.getYButtonPressed()) {
             intake.hatchMode();
             intake.goMedium();
@@ -87,6 +88,7 @@ public class ControllerMap {
             intake.retractMode();
         }
 
+        // Actually does hatches.
         if (secondController.getPOV() == 0) {// up d-pad
             intake.cargoMode();
             intake.goMedium();

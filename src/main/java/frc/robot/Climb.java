@@ -88,8 +88,8 @@ public class Climb extends Hardware {
     }
 
     public void moveClimbingArm(double speed) {
-        climbArm1.set(ControlMode.PercentOutput, speed / 3);
-        climbArm2.set(ControlMode.PercentOutput, speed / 3); // Already inverted in hardware.java
+        climbArm1.set(ControlMode.PercentOutput, speed / 2.5);
+        climbArm2.set(ControlMode.PercentOutput, speed / 2.5); // Already inverted in hardware.java
     }
 
     public void moveClimbingWheels(double speed) {

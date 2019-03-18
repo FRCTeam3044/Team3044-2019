@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -32,7 +33,7 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   UsbCamera intakeCam;
-  //UsbCamera climberCam;
+  // UsbCamera climberCam;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -52,8 +53,11 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    intakeCam = CameraServer.getInstance().startAutomaticCapture(0);
-    //climberCam = CameraServer.getInstance().startAutomaticCapture(1);
+    intakeCam = CameraServer.getInstance().startAutomaticCapture("Driver Camera :)", 0);
+    intakeCam.setPixelFormat(PixelFormat.kMJPEG);
+    intakeCam.setResolution(160, 120);
+    intakeCam.setFPS(15);
+    // climberCam = CameraServer.getInstance().startAutomaticCapture(1);
 
     Intake.getInstance().mode = "retract";
 

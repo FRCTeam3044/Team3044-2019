@@ -137,7 +137,7 @@ public class Intake extends Hardware {
                 // setPositions(SHOULDER_LOW_HATCHES, WRIST_LOW_HATCHES);
             } else if (level == "medium") { // Y button
                 sholderPIDController.setSetpoint(.1);
-                wristPIDController.setSetpoint(8500);
+                wristPIDController.setSetpoint(8400);
                 // setPositions(SHOULDER_MEDIUM_HATCHES, WRIST_MEDIUM_HATCHES);
             }
 
