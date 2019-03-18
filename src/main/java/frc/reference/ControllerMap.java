@@ -59,14 +59,19 @@ public class ControllerMap {
             drive.driveTheBot(firstController.getY(Hand.kLeft), firstController.getY(Hand.kRight));
         }
 
+        if (firstController.getAButton()) {
+            Hardware.intakeWrist.setSelectedSensorPosition(0,0,0);
+        }
+
     }
 
     void scoreMode() {
         intake.IntakePeriodic();
 
         // intake.moveShoulder(secondController.getY(Hand.kLeft));
-        intake.moveWrist(secondController.getY(Hand.kRight));
+        // intake.moveWrist(secondController.getY(Hand.kRight));
 
+        // Actually does cargo.
         if (secondController.getYButtonPressed()) {
             intake.hatchMode();
             intake.goMedium();
@@ -83,6 +88,7 @@ public class ControllerMap {
             intake.retractMode();
         }
 
+        // Actually does hatches.
         if (secondController.getPOV() == 0) {// up d-pad
             intake.cargoMode();
             intake.goMedium();
@@ -121,7 +127,7 @@ public class ControllerMap {
         if (secondController.getTriggerAxis(Hand.kRight) > .1) {
             climb.habPistonLift(3);
         }
-        if (secondController.getBumperPressed(Hand.kLeft)) {
+        if (secondController.getBumperPressed(Hand.kRight)) {
             climb.habPistonLift(0);
         }
         if (secondController.getBButtonPressed()) {
