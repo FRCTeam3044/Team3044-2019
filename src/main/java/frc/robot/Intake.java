@@ -33,13 +33,15 @@ public class Intake extends Hardware {
     PIDController wristPIDController;
     TalonEncoderPIDSource wristPIDSource;
     double currentSetpoint;
-    double startingEncoder;
+    public static double startingEncoder;
     boolean PIDenabled = true;
 
     double CONVERSION; // Number of pot counts per x degrees rotation. May need to be a double.
 
-    String mode = "retract"; // retract, hatches, cargo
+    public String mode = "retract"; // retract, hatches, cargo
     String level; // ground, low, medium, feeder
+
+    Boolean secondControllerExists;
 
     // All measurements in degrees.
     double SHOULDER_RETRACT = 0;
@@ -88,9 +90,6 @@ public class Intake extends Hardware {
         wristPIDController = new PIDController(.0005, 0, kD, wristPIDSource, intakeWrist);
         wristPIDController.setOutputRange(-.6, .4);
 
-        // sholderPIDController.enable();
-        // TODO
-
     }
 
     public void IntakePeriodic() {
@@ -104,14 +103,15 @@ public class Intake extends Hardware {
 
         if (mode != "retract") {
             PIDenabled = true;
+            secondControllerExists = true;
         }
-        SmartDashboard.putString("DB/String 4", "pot value: " + String.valueOf(potentiometer.getVoltage()));
+
         SmartDashboard.putString("DB/String 9", "setpoint: " + Double.toString(currentSetpoint));
     }
 
     void presetPositions() {
         if (mode != "retract") {
-            sholderPIDController.enable();// TODO
+            sholderPIDController.enable();
             wristPIDController.enable();
             PIDenabled = true;
             currentSetpoint += .02 * ControllerMap.getInstance().secondController.getY(Hand.kLeft);
@@ -123,35 +123,35 @@ public class Intake extends Hardware {
             wristPIDController.disable();
             PIDenabled = false;
 
-            //Actualy does cargo
+            // Actualy does cargo
         } else if (mode == "hatches") {
             if (level == "ground") { // A button
                 currentSetpoint = 2;
-                sholderPIDController.setSetpoint(currentSetpoint);
-                wristPIDController.setSetpoint(200);
+                sholderPIDController.setSetpoint(calcShoulderPosition(currentSetpoint));
+                wristPIDController.setSetpoint(calcWristPos(200));
 
                 // setPositions(SHOULDER_GROUND_HATCHES, WRIST_GROUND_HATCHES);
             } else if (level == "low") { // X button
-                sholderPIDController.setSetpoint(1.08);
-                wristPIDController.setSetpoint(6900);
+                sholderPIDController.setSetpoint(calcShoulderPosition(1.08));
+                wristPIDController.setSetpoint(calcWristPos(6900));
                 // setPositions(SHOULDER_LOW_HATCHES, WRIST_LOW_HATCHES);
             } else if (level == "medium") { // Y button
-                sholderPIDController.setSetpoint(.1);
-                wristPIDController.setSetpoint(8400);
+                sholderPIDController.setSetpoint(calcShoulderPosition(.1));
+                wristPIDController.setSetpoint(calcWristPos(8400));
                 // setPositions(SHOULDER_MEDIUM_HATCHES, WRIST_MEDIUM_HATCHES);
             }
 
-            //Actualy does hatches
+            // Actualy does hatches
         } else if (mode == "cargo") {
             if (level == "ground") { // Down dpad
-                sholderPIDController.setSetpoint(2);
-                wristPIDController.setSetpoint(200);
+                sholderPIDController.setSetpoint(calcShoulderPosition(2));
+                wristPIDController.setSetpoint(calcWristPos(200));
             } else if (level == "low") { // Left dpad
-                sholderPIDController.setSetpoint(1.73);
-                wristPIDController.setSetpoint(800);
+                sholderPIDController.setSetpoint(calcShoulderPosition(1.73));
+                wristPIDController.setSetpoint(calcWristPos(800));
             } else if (level == "medium") { // Up dpad
-                sholderPIDController.setSetpoint(1.4);
-                wristPIDController.setSetpoint(1300);
+                sholderPIDController.setSetpoint(calcShoulderPosition(1.4));
+                wristPIDController.setSetpoint(calcWristPos(1300));
             } else if (level == "feeder") { // Right dpad
 
             }
@@ -181,6 +181,14 @@ public class Intake extends Hardware {
 
     public void moveWrist(double speed) {
         intakeWrist.set(ControlMode.PercentOutput, speed / 1.5);
+    }
+
+    double calcShoulderPosition(double setpoint) {
+        return setpoint + .55; // TODO: Worlds set to 0
+    }
+
+    double calcWristPos(double setpoint) {
+        return setpoint + startingEncoder;
     }
 
     void shoulderTo(double position) {
@@ -234,6 +242,10 @@ public class Intake extends Hardware {
 
     public void goFeeder() {
         level = "feeder";
+    }
+
+    public boolean getSecondControllerExistance() {
+        return secondControllerExists;
     }
 
 }

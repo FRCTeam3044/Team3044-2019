@@ -60,7 +60,8 @@ public class ControllerMap {
         }
 
         if (firstController.getAButton()) {
-            Hardware.intakeWrist.setSelectedSensorPosition(0,0,0);
+            // Hardware.intakeWrist.setSelectedSensorPosition(0,0,0);
+            Intake.startingEncoder = Hardware.intakeWrist.getSensorCollection().getQuadraturePosition();
         }
 
     }
@@ -89,7 +90,7 @@ public class ControllerMap {
         }
 
         // Actually does hatches.
-        if (secondController.getPOV() == 0) {// up d-pad
+        if (secondController.getPOV() == 0 && intake.getSecondControllerExistance()) {// up d-pad
             intake.cargoMode();
             intake.goMedium();
         }
