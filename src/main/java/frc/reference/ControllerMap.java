@@ -69,42 +69,30 @@ public class ControllerMap {
     void scoreMode() {
         intake.IntakePeriodic();
 
-        // intake.moveShoulder(secondController.getY(Hand.kLeft));
-        // intake.moveWrist(secondController.getY(Hand.kRight));
-
         // Actually does cargo.
         if (secondController.getYButtonPressed()) {
-            intake.hatchMode();
-            intake.goMedium();
+            intake.setCargoScoreInCargoShip();
         }
         if (secondController.getXButtonPressed()) {
-            intake.hatchMode();
-            intake.goLow();
+            intake.setCargoGroundPickup();
         }
         if (secondController.getAButtonPressed()) {
-            intake.hatchMode();
-            intake.goGround();
+            intake.setRetracted();
         }
         if (secondController.getBButtonPressed()) {
-            intake.retractMode();
+            intake.setManualControl();
         }
 
         // Actually does hatches.
         if (secondController.getPOV() == 0 && intake.getSecondControllerExistance()) {// up d-pad
-            intake.cargoMode();
-            intake.goMedium();
         }
         if (secondController.getPOV() == 90) {// right d-pad
-            intake.cargoMode();
-            intake.goFeeder();
         }
         if (secondController.getPOV() == 180) {// down d-pad
-            intake.cargoMode();
-            intake.goGround();
+            intake.setRetracted();
         }
         if (secondController.getPOV() == 270) {// left d-pad
-            intake.cargoMode();
-            intake.goLow();
+            intake.setHatchLevel1();
         }
 
         if (secondController.getBumper(Hand.kLeft)) {
@@ -131,8 +119,9 @@ public class ControllerMap {
         if (secondController.getBumperPressed(Hand.kRight)) {
             climb.habPistonLift(0);
         }
-        if (secondController.getBButtonPressed()) {
-            intake.retractMode();
+        if (secondController.getAButtonPressed()) {
+            // intake.setRetracted();
+            // TODO: Sets to last PID position, not the retracted position.
         }
 
         if (secondController.getYButtonPressed()) {
@@ -157,8 +146,9 @@ public class ControllerMap {
         if (controller.getBumperPressed(Hand.kLeft)) {
             climb.habPistonLift(0);
         }
-        if (controller.getBButtonPressed()) {
-            intake.retractMode();
+        if (controller.getAButtonPressed()) {
+            // intake.setRetracted();
+            // TODO: Sets to last PID position, not the retracted position.
         }
 
         if (controller.getYButtonPressed()) {
