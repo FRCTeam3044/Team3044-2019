@@ -84,7 +84,7 @@ public class ControllerMap {
         }
 
         // Actually does hatches.
-        if (secondController.getPOV() == 0 && intake.getSecondControllerExistance()) {// up d-pad
+        if (secondController.getPOV() == 0 && intake.getSecondControllerExistence()) {// up d-pad
         }
         if (secondController.getPOV() == 90) {// right d-pad
         }

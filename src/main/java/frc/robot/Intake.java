@@ -29,7 +29,7 @@ public class Intake extends Hardware {
     double startingPosition;
     // double currentPosition;
     double kP, kI, kD;
-    PIDController sholderPIDController;
+    PIDController shoulderPIDController;
     PIDController wristPIDController;
     TalonEncoderPIDSource wristPIDSource;
     double currentSetpoint;
@@ -81,9 +81,9 @@ public class Intake extends Hardware {
         kD = 0;
         currentSetpoint = 2;
         wristPIDSource = new TalonEncoderPIDSource(intakeWrist, PIDSourceType.kDisplacement);
-        sholderPIDController = new PIDController(kP, kI, kD, 0, potentiometer, intakeArm1);
-        sholderPIDController.setInputRange(0, 4);
-        sholderPIDController.setOutputRange(-.5, .05);
+        shoulderPIDController = new PIDController(kP, kI, kD, 0, potentiometer, intakeArm1);
+        shoulderPIDController.setInputRange(0, 4);
+        shoulderPIDController.setOutputRange(-.5, .05);
 
         wristPIDController = new PIDController(.0005, 0, .001, wristPIDSource, intakeWrist);
         wristPIDController.setOutputRange(-.6, .4);
@@ -94,7 +94,7 @@ public class Intake extends Hardware {
         // currentPosition = Double.valueOf(potentiometer.getValue());
         if (PIDenabled) {
             // presetPositions();
-            sholderPIDController.setSetpoint(calcShoulderPosition(shoulderSetpoint));
+            shoulderPIDController.setSetpoint(calcShoulderPosition(shoulderSetpoint));
             wristPIDController.setSetpoint(calcWristPos(wristSetpoint));
 
             shoulderSetpoint += .02 * ControllerMap.getInstance().secondController.getY(Hand.kLeft);
@@ -111,7 +111,7 @@ public class Intake extends Hardware {
     }
 
     public void setManualControl() {
-        sholderPIDController.disable();
+        shoulderPIDController.disable();
         wristPIDController.disable();
         PIDenabled = false;
     }
@@ -141,7 +141,7 @@ public class Intake extends Hardware {
     }
 
     void enablePID() {
-        sholderPIDController.enable();
+        shoulderPIDController.enable();
         wristPIDController.enable();
         PIDenabled = true;
         secondControllerExists = true;
@@ -192,7 +192,7 @@ public class Intake extends Hardware {
         return CONVERSION * degrees;
     }
 
-    public boolean getSecondControllerExistance() {
+    public boolean getSecondControllerExistence() {
         return secondControllerExists;
     }
 
