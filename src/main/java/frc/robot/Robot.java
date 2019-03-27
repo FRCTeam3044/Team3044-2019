@@ -74,10 +74,12 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
 
     SmartDashboard.putString("DB/String 0", ": " + ControllerMap.driverMode);
-    SmartDashboard.putString("DB/String 4",
+    SmartDashboard.putString("DB/String 3",
         "pot value: " + String.valueOf(Intake.getInstance().potentiometer.getVoltage()));
     SmartDashboard.putString("DB/String 8",
         "wrist encoder: " + String.valueOf(Hardware.intakeWrist.getSensorCollection().getQuadraturePosition()));
+    SmartDashboard.putString("DB/String 9",
+        "Corrected wrist: " + String.valueOf(Intake.getInstance().getCorrectedWristEncoderValue()));
     // SmartDashboard.putString("DB/String 4", "pot value: " +
     // String.valueOf(intake.potentiometer.getValue()));
     // SmartDashboard.putString("DB/String 9", "pot voltage: " +

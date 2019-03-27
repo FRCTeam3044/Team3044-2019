@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.reference.ControllerMap;
 import frc.reference.Hardware;
 import frc.reference.TalonEncoderPIDSource;
@@ -26,14 +25,12 @@ public class Intake extends Hardware {
     private static Intake instance = null;
 
     AnalogInput potentiometer;
-    double startingPosition;
-    // double currentPosition;
-    double kP, kI, kD;
+    double kP_shoulder, kI_shoulder, kD_shoulder;
+    double kP_wrist, kI_wrist, kD_wrist;
     PIDController shoulderPIDController;
     PIDController wristPIDController;
     TalonEncoderPIDSource wristPIDSource;
-    double currentSetpoint;
-    public static double startingEncoder;
+    public static double startingWristEncoderPosition;
     boolean PIDenabled = false;
     double shoulderSetpoint;
     double wristSetpoint;
@@ -72,42 +69,39 @@ public class Intake extends Hardware {
     public void IntakeInit() {
         intakeWrist.setSelectedSensorPosition(0);
         potentiometer = new AnalogInput(3);
-        startingPosition = potentiometer.getValue();
-        startingEncoder = intakeWrist.getSensorCollection().getQuadraturePosition();
-        System.out.println("start " + startingPosition);
+        startingWristEncoderPosition = intakeWrist.getSensorCollection().getQuadraturePosition();
 
-        kP = 0.9;
-        kI = 0;
-        kD = 0;
-        currentSetpoint = 2;
-        wristPIDSource = new TalonEncoderPIDSource(intakeWrist, PIDSourceType.kDisplacement);
-        shoulderPIDController = new PIDController(kP, kI, kD, 0, potentiometer, intakeArm1);
+        kP_shoulder = 1;
+        kI_shoulder = 0;
+        kD_shoulder = 0;
+        shoulderPIDController = new PIDController(kP_shoulder, kI_shoulder, kD_shoulder, potentiometer, intakeArm1);
         shoulderPIDController.setInputRange(0, 4);
-        shoulderPIDController.setOutputRange(-.5, .05);
+        shoulderPIDController.setOutputRange(-.5, .05); // Up, down
 
-        wristPIDController = new PIDController(.0005, 0, .001, wristPIDSource, intakeWrist);
-        wristPIDController.setOutputRange(-.6, .4);
+        kP_wrist = .0005;
+        kI_wrist = 0;
+        kD_wrist = 0;
+        wristPIDSource = new TalonEncoderPIDSource(intakeWrist, PIDSourceType.kDisplacement);
+        wristPIDController = new PIDController(kP_wrist, kI_wrist, kD_wrist, wristPIDSource, intakeWrist);
+        wristPIDController.setOutputRange(-.7, .45); // Up, down
 
     }
 
     public void IntakePeriodic() {
-        // currentPosition = Double.valueOf(potentiometer.getValue());
         if (PIDenabled) {
-            // presetPositions();
             shoulderPIDController.setSetpoint(calcShoulderPosition(shoulderSetpoint));
             wristPIDController.setSetpoint(calcWristPos(wristSetpoint));
 
-            shoulderSetpoint += .02 * ControllerMap.getInstance().secondController.getY(Hand.kLeft);
+            if (Math.abs(ControllerMap.getInstance().secondController.getY(Hand.kLeft)) > .1) {
+                shoulderSetpoint += .02 * ControllerMap.getInstance().secondController.getY(Hand.kLeft);
+            }
+            // wristSetpoint += .02 *
+            // ControllerMap.getInstance().secondController.getY(Hand.kRight);
         } else {
             moveShoulder(ControllerMap.getInstance().secondController.getY(Hand.kLeft));
             moveWrist(ControllerMap.getInstance().secondController.getY(Hand.kRight));
         }
 
-        /*
-         * if (mode != "retract") { PIDenabled = true; secondControllerExists = true; }
-         */
-
-        SmartDashboard.putString("DB/String 9", "setpoint: " + Double.toString(currentSetpoint));
     }
 
     public void setManualControl() {
@@ -123,8 +117,8 @@ public class Intake extends Hardware {
     }
 
     public void setCargoGroundPickup() {
-        shoulderSetpoint = 1.08;
-        wristSetpoint = 6900;
+        shoulderSetpoint = 1.00;
+        wristSetpoint = 7900;
         enablePID();
     }
 
@@ -145,6 +139,14 @@ public class Intake extends Hardware {
         wristPIDController.enable();
         PIDenabled = true;
         secondControllerExists = true;
+    }
+
+    public void resetWristEncoderWithMath() {
+        startingWristEncoderPosition = intakeWrist.getSensorCollection().getQuadraturePosition();
+    }
+
+    public double getCorrectedWristEncoderValue() {
+        return intakeWrist.getSensorCollection().getQuadraturePosition() - startingWristEncoderPosition;
     }
 
     public void ejectHatch(boolean button) {
@@ -177,7 +179,7 @@ public class Intake extends Hardware {
     }
 
     double calcWristPos(double setpoint) {
-        return setpoint + startingEncoder;
+        return setpoint + startingWristEncoderPosition;
     }
 
     double calcWristPosHatches(double armPositionDeg) {

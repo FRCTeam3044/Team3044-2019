@@ -60,8 +60,7 @@ public class ControllerMap {
         }
 
         if (firstController.getAButton()) {
-            // Hardware.intakeWrist.setSelectedSensorPosition(0,0,0);
-            Intake.startingEncoder = Hardware.intakeWrist.getSensorCollection().getQuadraturePosition();
+            intake.resetWristEncoderWithMath();
         }
 
     }
