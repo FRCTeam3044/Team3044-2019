@@ -65,9 +65,9 @@ public class Hardware {
         leftBackDrive.follow(leftFrontDrive);
         rightBackDrive.follow(rightFrontDrive);
         leftFrontDrive.setInverted(true);
-        rightFrontDrive.setInverted(false); //TODO: Worlds set true
+        rightFrontDrive.setInverted(false); // TODO: Worlds set true
         leftBackDrive.setInverted(InvertType.FollowMaster);
-        rightBackDrive.setInverted(InvertType.OpposeMaster); //TODO:Worlds set followMaster
+        rightBackDrive.setInverted(InvertType.OpposeMaster); // TODO:Worlds set followMaster
 
         // Uses front talons to define motors used in WPI tank drive, the back
         // motors move because of the follower.
@@ -88,20 +88,26 @@ public class Hardware {
         climbArm1 = new TalonSRX(8);
         climbArm2 = new TalonSRX(9);
         climbWheels = new TalonSRX(10);
-        climbPiston1 = new DoubleSolenoid(1,0);
-        climbPiston2 = new DoubleSolenoid(3,2);
+        climbPiston1 = new DoubleSolenoid(1, 0);
+        climbPiston2 = new DoubleSolenoid(3, 2);
 
         climbArm2.setInverted(true);
         Climb.getInstance().retractBothPistons();
 
-        // --------------------------------
-        // --------------------------------
-        // --------------------------------
+        // ----------------------------------------------------------------
+        // ----------------------------------------------------------------
+        // ----------------------------------------------------------------
 
+        // Drive
         leftFrontDrive.configNeutralDeadband(.04);
         rightFrontDrive.configNeutralDeadband(.04);
         leftBackDrive.configNeutralDeadband(.04);
         rightBackDrive.configNeutralDeadband(.04);
+
+        leftFrontDrive.configOpenloopRamp(.2);
+        rightFrontDrive.configOpenloopRamp(.2);
+        leftBackDrive.configOpenloopRamp(.2);
+        rightBackDrive.configOpenloopRamp(.2);
 
         intakeArm1.configNeutralDeadband(.04);
         intakeArm2.configNeutralDeadband(.04);

@@ -119,8 +119,7 @@ public class ControllerMap {
             climb.habPistonLift(0);
         }
         if (secondController.getAButtonPressed()) {
-            // intake.setRetracted();
-            // TODO: Sets to last PID position, not the retracted position.
+            intake.setRetracted();
         }
 
         if (secondController.getYButtonPressed()) {
@@ -146,8 +145,7 @@ public class ControllerMap {
             climb.habPistonLift(0);
         }
         if (controller.getAButtonPressed()) {
-            // intake.setRetracted();
-            // TODO: Sets to last PID position, not the retracted position.
+            intake.setRetracted();
         }
 
         if (controller.getYButtonPressed()) {

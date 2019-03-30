@@ -89,14 +89,14 @@ public class Intake extends Hardware {
 
     public void IntakePeriodic() {
         if (PIDenabled) {
-            shoulderPIDController.setSetpoint(calcShoulderPosition(shoulderSetpoint));
-            wristPIDController.setSetpoint(calcWristPos(wristSetpoint));
+            setBothSetpoints();
 
             if (Math.abs(ControllerMap.getInstance().secondController.getY(Hand.kLeft)) > .1) {
-                shoulderSetpoint += .02 * ControllerMap.getInstance().secondController.getY(Hand.kLeft);
+                shoulderSetpoint += .01 * ControllerMap.getInstance().secondController.getY(Hand.kLeft);
             }
-            // wristSetpoint += .02 *
-            // ControllerMap.getInstance().secondController.getY(Hand.kRight);
+            if (Math.abs(ControllerMap.getInstance().secondController.getY(Hand.kRight)) > .1) {
+                wristSetpoint += 18 * ControllerMap.getInstance().secondController.getY(Hand.kRight);
+            }
         } else {
             moveShoulder(ControllerMap.getInstance().secondController.getY(Hand.kLeft));
             moveWrist(ControllerMap.getInstance().secondController.getY(Hand.kRight));
@@ -137,8 +137,14 @@ public class Intake extends Hardware {
     void enablePID() {
         shoulderPIDController.enable();
         wristPIDController.enable();
+        setBothSetpoints();
         PIDenabled = true;
         secondControllerExists = true;
+    }
+
+    void setBothSetpoints() {
+        shoulderPIDController.setSetpoint(calcShoulderPosition(shoulderSetpoint));
+        wristPIDController.setSetpoint(calcWristPos(wristSetpoint));
     }
 
     public void resetWristEncoderWithMath() {
