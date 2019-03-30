@@ -75,7 +75,7 @@ public class Intake extends Hardware {
         kI_shoulder = 0;
         kD_shoulder = 0;
         shoulderPIDController = new PIDController(kP_shoulder, kI_shoulder, kD_shoulder, potentiometer, intakeArm1);
-        shoulderPIDController.setInputRange(0, 4);
+        shoulderPIDController.setInputRange(1.5, 4);
         shoulderPIDController.setOutputRange(-.5, .05); // Up, down
 
         kP_wrist = .0005;
@@ -91,11 +91,11 @@ public class Intake extends Hardware {
         if (PIDenabled) {
             setBothSetpoints();
 
-            if (Math.abs(ControllerMap.getInstance().secondController.getY(Hand.kLeft)) > .1) {
+            if (Math.abs(ControllerMap.getInstance().secondController.getY(Hand.kLeft)) > .2) {
                 shoulderSetpoint += .01 * ControllerMap.getInstance().secondController.getY(Hand.kLeft);
             }
-            if (Math.abs(ControllerMap.getInstance().secondController.getY(Hand.kRight)) > .1) {
-                wristSetpoint += 18 * ControllerMap.getInstance().secondController.getY(Hand.kRight);
+            if (Math.abs(ControllerMap.getInstance().secondController.getY(Hand.kRight)) > .2) {
+                wristSetpoint += 27 * ControllerMap.getInstance().secondController.getY(Hand.kRight);
             }
         } else {
             moveShoulder(ControllerMap.getInstance().secondController.getY(Hand.kLeft));
@@ -118,13 +118,13 @@ public class Intake extends Hardware {
 
     public void setCargoGroundPickup() {
         shoulderSetpoint = 1.00;
-        wristSetpoint = 7900;
+        wristSetpoint = 7200;
         enablePID();
     }
 
     public void setCargoScoreInCargoShip() {
         shoulderSetpoint = .1;
-        wristSetpoint = 8400;
+        wristSetpoint = 8100;
         enablePID();
     }
 
@@ -152,15 +152,15 @@ public class Intake extends Hardware {
     }
 
     public double getCorrectedWristEncoderValue() {
-        return intakeWrist.getSensorCollection().getQuadraturePosition() - startingWristEncoderPosition;
+        return intakeWrist.getSensorCollection().getQuadraturePosition() - startingWristEncoderPosition-200;
     }
 
-    public void ejectHatch(boolean button) {
-        if (button) {
-            hatchEject.set(Value.kForward);
-        } else {
-            hatchEject.set(Value.kReverse);
-        }
+    public void grabHatch() {
+        hatchEject.set(Value.kForward);
+    }
+
+    public void releaseHatch() {
+        hatchEject.set(Value.kReverse);
     }
 
     public void spinCargoWheels(double speed) {
@@ -181,7 +181,7 @@ public class Intake extends Hardware {
     }
 
     double calcShoulderPosition(double setpoint) {
-        return setpoint + .55; // TODO: Worlds set to 0
+        return setpoint + 2; // TODO: Worlds set to 0
     }
 
     double calcWristPos(double setpoint) {

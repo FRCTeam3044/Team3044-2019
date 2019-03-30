@@ -102,7 +102,12 @@ public class ControllerMap {
             intake.spinCargoWheels(0);
         }
 
-        intake.ejectHatch(secondController.getBumper(Hand.kRight));
+        if (secondController.getBumper(Hand.kRight)) {
+            intake.grabHatch();
+        }
+        if (secondController.getTriggerAxis(Hand.kRight) > .1) {
+            intake.releaseHatch();
+        }
     }
 
     void climbMode() {

@@ -103,6 +103,8 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
+
+    Intake.getInstance().releaseHatch();
   }
 
   /**
@@ -122,6 +124,11 @@ public class Robot extends TimedRobot {
     }
 
     controllerMap.controllerMapPeriodic();
+  }
+
+  @Override
+  public void teleopInit() {
+    Intake.getInstance().releaseHatch();
   }
 
   /**
