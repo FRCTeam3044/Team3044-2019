@@ -118,18 +118,30 @@ public class Intake extends Hardware {
 
     public void setCargoGroundPickup() {
         shoulderSetpoint = 1.00;
-        wristSetpoint = 7200;
+        wristSetpoint = 6900;
         enablePID();
     }
 
     public void setCargoScoreInCargoShip() {
-        shoulderSetpoint = .1;
-        wristSetpoint = 8100;
+        shoulderSetpoint = -.1;
+        wristSetpoint = 8400;
+        enablePID();
+    }
+
+    public void setCargoScoreRocketLevel1() {
+        shoulderSetpoint = 0.4;
+        wristSetpoint = 7300;
+        enablePID();
+    }
+
+    public void setCargoScoreRocketLevel2() {
+        shoulderSetpoint = -.3;
+        wristSetpoint = 7800;
         enablePID();
     }
 
     public void setHatchLevel1() {
-        shoulderSetpoint = 1.73;
+        shoulderSetpoint = 1.70;
         wristSetpoint = 800;
         enablePID();
     }
@@ -152,7 +164,7 @@ public class Intake extends Hardware {
     }
 
     public double getCorrectedWristEncoderValue() {
-        return intakeWrist.getSensorCollection().getQuadraturePosition() - startingWristEncoderPosition-200;
+        return intakeWrist.getSensorCollection().getQuadraturePosition() - startingWristEncoderPosition - 200;
     }
 
     public void grabHatch() {

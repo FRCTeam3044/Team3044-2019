@@ -82,10 +82,12 @@ public class ControllerMap {
             intake.setManualControl();
         }
 
-        // Actually does hatches.
+        // Actually does hatches and cargo.
         if (secondController.getPOV() == 0 && intake.getSecondControllerExistence()) {// up d-pad
+            intake.setCargoScoreRocketLevel2();
         }
         if (secondController.getPOV() == 90) {// right d-pad
+            intake.setCargoScoreRocketLevel1();
         }
         if (secondController.getPOV() == 180) {// down d-pad
             intake.setRetracted();
