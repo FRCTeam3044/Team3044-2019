@@ -59,8 +59,6 @@ public class Robot extends TimedRobot {
     intakeCam.setFPS(15);
     // climberCam = CameraServer.getInstance().startAutomaticCapture(1);
 
-    Intake.getInstance().mode = "retract";
-
   }
 
   /**
@@ -76,10 +74,12 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
 
     SmartDashboard.putString("DB/String 0", ": " + ControllerMap.driverMode);
-    SmartDashboard.putString("DB/String 5", ": " + Intake.getInstance().mode);
-    SmartDashboard.putString("DB/String 6", ": " + Intake.getInstance().level);
-    SmartDashboard.putString("DB/String 4", "pot value: " + String.valueOf(Intake.getInstance().potentiometer.getVoltage()));
-    SmartDashboard.putString("DB/String 8", "wrist encoder: " + String.valueOf(Hardware.intakeWrist.getSensorCollection().getQuadraturePosition()));
+    SmartDashboard.putString("DB/String 3",
+        "pot value: " + String.valueOf(Intake.getInstance().potentiometer.getVoltage()));
+    SmartDashboard.putString("DB/String 8",
+        "wrist encoder: " + String.valueOf(Hardware.intakeWrist.getSensorCollection().getQuadraturePosition()));
+    SmartDashboard.putString("DB/String 9",
+        "Corrected wrist: " + String.valueOf(Intake.getInstance().getCorrectedWristEncoderValue()));
     // SmartDashboard.putString("DB/String 4", "pot value: " +
     // String.valueOf(intake.potentiometer.getValue()));
     // SmartDashboard.putString("DB/String 9", "pot voltage: " +
@@ -103,6 +103,8 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
+
+    Intake.getInstance().releaseHatch();
   }
 
   /**
@@ -122,6 +124,11 @@ public class Robot extends TimedRobot {
     }
 
     controllerMap.controllerMapPeriodic();
+  }
+
+  @Override
+  public void teleopInit() {
+    Intake.getInstance().releaseHatch();
   }
 
   /**

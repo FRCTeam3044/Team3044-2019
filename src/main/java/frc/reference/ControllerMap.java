@@ -60,8 +60,7 @@ public class ControllerMap {
         }
 
         if (firstController.getAButton()) {
-            // Hardware.intakeWrist.setSelectedSensorPosition(0,0,0);
-            Intake.startingEncoder = Hardware.intakeWrist.getSensorCollection().getQuadraturePosition();
+            intake.resetWristEncoderWithMath();
         }
 
     }
@@ -69,42 +68,32 @@ public class ControllerMap {
     void scoreMode() {
         intake.IntakePeriodic();
 
-        // intake.moveShoulder(secondController.getY(Hand.kLeft));
-        // intake.moveWrist(secondController.getY(Hand.kRight));
-
         // Actually does cargo.
         if (secondController.getYButtonPressed()) {
-            intake.hatchMode();
-            intake.goMedium();
+            intake.setCargoScoreInCargoShip();
         }
         if (secondController.getXButtonPressed()) {
-            intake.hatchMode();
-            intake.goLow();
+            intake.setCargoGroundPickup();
         }
         if (secondController.getAButtonPressed()) {
-            intake.hatchMode();
-            intake.goGround();
+            intake.setRetracted();
         }
         if (secondController.getBButtonPressed()) {
-            intake.retractMode();
+            intake.setManualControl();
         }
 
-        // Actually does hatches.
-        if (secondController.getPOV() == 0 && intake.getSecondControllerExistance()) {// up d-pad
-            intake.cargoMode();
-            intake.goMedium();
+        // Actually does hatches and cargo.
+        if (secondController.getPOV() == 0 && intake.getSecondControllerExistence()) {// up d-pad
+            intake.setCargoScoreRocketLevel2();
         }
         if (secondController.getPOV() == 90) {// right d-pad
-            intake.cargoMode();
-            intake.goFeeder();
+            intake.setCargoScoreRocketLevel1();
         }
         if (secondController.getPOV() == 180) {// down d-pad
-            intake.cargoMode();
-            intake.goGround();
+            intake.setRetracted();
         }
         if (secondController.getPOV() == 270) {// left d-pad
-            intake.cargoMode();
-            intake.goLow();
+            intake.setHatchLevel1();
         }
 
         if (secondController.getBumper(Hand.kLeft)) {
@@ -115,7 +104,12 @@ public class ControllerMap {
             intake.spinCargoWheels(0);
         }
 
-        intake.ejectHatch(secondController.getBumper(Hand.kRight));
+        if (secondController.getBumper(Hand.kRight)) {
+            intake.grabHatch();
+        }
+        if (secondController.getTriggerAxis(Hand.kRight) > .1) {
+            intake.releaseHatch();
+        }
     }
 
     void climbMode() {
@@ -131,8 +125,8 @@ public class ControllerMap {
         if (secondController.getBumperPressed(Hand.kRight)) {
             climb.habPistonLift(0);
         }
-        if (secondController.getBButtonPressed()) {
-            intake.retractMode();
+        if (secondController.getAButtonPressed()) {
+            intake.setRetracted();
         }
 
         if (secondController.getYButtonPressed()) {
@@ -157,8 +151,8 @@ public class ControllerMap {
         if (controller.getBumperPressed(Hand.kLeft)) {
             climb.habPistonLift(0);
         }
-        if (controller.getBButtonPressed()) {
-            intake.retractMode();
+        if (controller.getAButtonPressed()) {
+            intake.setRetracted();
         }
 
         if (controller.getYButtonPressed()) {
