@@ -71,7 +71,7 @@ public class Intake extends Hardware {
         potentiometer = new AnalogInput(3);
         startingWristEncoderPosition = intakeWrist.getSensorCollection().getQuadraturePosition();
 
-        kP_shoulder = 1;
+        kP_shoulder = 2;
         kI_shoulder = 0;
         kD_shoulder = 0;
         shoulderPIDController = new PIDController(kP_shoulder, kI_shoulder, kD_shoulder, potentiometer, intakeArm1);
@@ -141,8 +141,8 @@ public class Intake extends Hardware {
     }
 
     public void setHatchLevel1() {
-        shoulderSetpoint = 1.70;
-        wristSetpoint = 800;
+        shoulderSetpoint = 1.55;
+        wristSetpoint = 1250;
         enablePID();
     }
 
