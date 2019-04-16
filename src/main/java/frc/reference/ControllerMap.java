@@ -26,6 +26,9 @@ public class ControllerMap {
     public XboxController firstController = new XboxController(0);
     public XboxController secondController = new XboxController(1);
 
+    Rumble rumbleFirst = new Rumble(firstController);
+    Rumble rumbleSecond = new Rumble(secondController);
+
     public static String driverMode; // score, climb, failureFirst, failureSecond
 
     /*
@@ -44,6 +47,10 @@ public class ControllerMap {
     }
 
     public void controllerMapPeriodic() {
+        rumbleFirst.rumblePeriodic();
+        rumbleSecond.rumblePeriodic();
+        // rumbleFirst.matchTimer(); //TODO: Work in progress
+
         switchMode();
         if (driverMode == "score") {
             scoreMode();
@@ -61,6 +68,7 @@ public class ControllerMap {
 
         if (firstController.getAButton()) {
             intake.resetWristEncoderWithMath();
+            rumbleSecond.rumble(.5);
         }
 
     }
@@ -106,9 +114,11 @@ public class ControllerMap {
 
         if (secondController.getBumper(Hand.kRight)) {
             intake.grabHatch();
+            rumbleFirst.rumble(.5);
         }
         if (secondController.getTriggerAxis(Hand.kRight) > .1) {
             intake.releaseHatch();
+            rumbleFirst.rumble(.5);
         }
     }
 
@@ -182,4 +192,5 @@ public class ControllerMap {
             }
         }
     }
+
 }

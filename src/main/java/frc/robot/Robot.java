@@ -76,6 +76,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putString("DB/String 0", ": " + ControllerMap.driverMode);
     SmartDashboard.putString("DB/String 3",
         "pot value: " + String.valueOf(Intake.getInstance().potentiometer.getVoltage()));
+    SmartDashboard.putString("DB/String 7", "Zero position: " + Intake.getInstance().getStartingWristEncoderValue());
     SmartDashboard.putString("DB/String 8",
         "wrist encoder: " + String.valueOf(Hardware.intakeWrist.getSensorCollection().getQuadraturePosition()));
     SmartDashboard.putString("DB/String 9",

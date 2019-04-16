@@ -30,7 +30,7 @@ public class Intake extends Hardware {
     PIDController shoulderPIDController;
     PIDController wristPIDController;
     TalonEncoderPIDSource wristPIDSource;
-    public static double startingWristEncoderPosition;
+    public static double startingWristEncoderPosition = 0;
     boolean PIDenabled = false;
     double shoulderSetpoint;
     double wristSetpoint;
@@ -69,7 +69,8 @@ public class Intake extends Hardware {
     public void IntakeInit() {
         intakeWrist.setSelectedSensorPosition(0);
         potentiometer = new AnalogInput(3);
-        startingWristEncoderPosition = intakeWrist.getSensorCollection().getQuadraturePosition();
+        // startingWristEncoderPosition =
+        // intakeWrist.getSensorCollection().getQuadraturePosition();
 
         kP_shoulder = 2;
         kI_shoulder = 0;
@@ -164,7 +165,11 @@ public class Intake extends Hardware {
     }
 
     public double getCorrectedWristEncoderValue() {
-        return intakeWrist.getSensorCollection().getQuadraturePosition() - startingWristEncoderPosition - 200;
+        return intakeWrist.getSensorCollection().getQuadraturePosition() - startingWristEncoderPosition;
+    }
+
+    public double getStartingWristEncoderValue() {
+        return startingWristEncoderPosition;
     }
 
     public void grabHatch() {
