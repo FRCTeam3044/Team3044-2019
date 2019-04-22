@@ -125,13 +125,13 @@ public class Intake extends Hardware {
 
     public void setCargoScoreInCargoShip() {
         shoulderSetpoint = -.1;
-        wristSetpoint = 8400;
+        wristSetpoint = 8000;
         enablePID();
     }
 
     public void setCargoScoreRocketLevel1() {
         shoulderSetpoint = 0.4;
-        wristSetpoint = 7300;
+        wristSetpoint = 7100;
         enablePID();
     }
 
@@ -162,6 +162,7 @@ public class Intake extends Hardware {
 
     public void resetWristEncoderWithMath() {
         startingWristEncoderPosition = intakeWrist.getSensorCollection().getQuadraturePosition();
+        setManualControl();
     }
 
     public double getCorrectedWristEncoderValue() {

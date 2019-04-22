@@ -109,7 +109,7 @@ public class ControllerMap {
         } else if (secondController.getTriggerAxis(Hand.kLeft) > .1) {
             intake.spinCargoWheels(1);
         } else {
-            intake.spinCargoWheels(0);
+            intake.spinCargoWheels(-.05);
         }
 
         if (secondController.getBumper(Hand.kRight)) {
