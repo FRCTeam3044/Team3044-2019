@@ -118,31 +118,31 @@ public class Intake extends Hardware {
     }
 
     public void setCargoGroundPickup() {
-        shoulderSetpoint = 1.00;
-        wristSetpoint = 6900;
+        shoulderSetpoint = .97;
+        wristSetpoint = 7420;
         enablePID();
     }
 
     public void setCargoScoreInCargoShip() {
         shoulderSetpoint = -.1;
-        wristSetpoint = 8000;
+        wristSetpoint = 9500;
         enablePID();
     }
 
     public void setCargoScoreRocketLevel1() {
-        shoulderSetpoint = 0.4;
-        wristSetpoint = 7100;
+        shoulderSetpoint = 0.65;
+        wristSetpoint = 6800;
         enablePID();
     }
 
     public void setCargoScoreRocketLevel2() {
-        shoulderSetpoint = -.3;
-        wristSetpoint = 7800;
+        shoulderSetpoint = -0.1;
+        wristSetpoint = 7700;
         enablePID();
     }
 
     public void setHatchLevel1() {
-        shoulderSetpoint = 1.55;
+        shoulderSetpoint = 1.6;
         wristSetpoint = 1250;
         enablePID();
     }
@@ -199,7 +199,7 @@ public class Intake extends Hardware {
     }
 
     double calcShoulderPosition(double setpoint) {
-        return setpoint + 2; // TODO: Worlds set to 0
+        return setpoint + 1.8; // TODO:Practice bot set to 2
     }
 
     double calcWristPos(double setpoint) {

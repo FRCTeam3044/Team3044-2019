@@ -65,9 +65,9 @@ public class Hardware {
         leftBackDrive.follow(leftFrontDrive);
         rightBackDrive.follow(rightFrontDrive);
         leftFrontDrive.setInverted(true);
-        rightFrontDrive.setInverted(false); // TODO: Worlds set true
+        rightFrontDrive.setInverted(true); // TODO: Practice bot set false
         leftBackDrive.setInverted(InvertType.FollowMaster);
-        rightBackDrive.setInverted(InvertType.OpposeMaster); // TODO:Worlds set followMaster
+        rightBackDrive.setInverted(InvertType.FollowMaster); // TODO:Practice bot set OpposeMaster
 
         // Uses front talons to define motors used in WPI tank drive, the back
         // motors move because of the follower.
