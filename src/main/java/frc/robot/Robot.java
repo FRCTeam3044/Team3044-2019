@@ -54,12 +54,12 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    intakeCam = CameraServer.getInstance().startAutomaticCapture("Driver Camera :)", 0);
+    /* intakeCam = CameraServer.getInstance().startAutomaticCapture("Driver Camera :)", 1);
     intakeCam.setPixelFormat(PixelFormat.kMJPEG);
     intakeCam.setResolution(160, 120);
-    intakeCam.setFPS(15);
+    intakeCam.setFPS(15); */
 
-    lineCam = CameraServer.getInstance().startAutomaticCapture("Line camera :)", 1);
+    lineCam = CameraServer.getInstance().startAutomaticCapture("Line camera :)", 0);
     lineCam.setPixelFormat(PixelFormat.kMJPEG);
     lineCam.setResolution(160, 120);
     lineCam.setFPS(15);
@@ -136,6 +136,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     Intake.getInstance().releaseHatch();
+
+    //lineCam = CameraServer.getInstance().startAutomaticCapture("Line camera :)", 0);
+    //CameraServer.getInstance().removeCamera("Driver Camera :)");
+    //intakeCam.close();
   }
 
   /**

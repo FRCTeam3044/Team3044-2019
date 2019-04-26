@@ -72,12 +72,12 @@ public class Intake extends Hardware {
         // startingWristEncoderPosition =
         // intakeWrist.getSensorCollection().getQuadraturePosition();
 
-        kP_shoulder = 2;
+        kP_shoulder = 1.8;
         kI_shoulder = 0;
         kD_shoulder = 0;
         shoulderPIDController = new PIDController(kP_shoulder, kI_shoulder, kD_shoulder, potentiometer, intakeArm1);
         shoulderPIDController.setInputRange(1.5, 4);
-        shoulderPIDController.setOutputRange(-.5, .05); // Up, down
+        shoulderPIDController.setOutputRange(-.55, .02); // Up, down
 
         kP_wrist = .0005;
         kI_wrist = 0;
