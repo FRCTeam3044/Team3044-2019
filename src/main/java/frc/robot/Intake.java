@@ -96,7 +96,7 @@ public class Intake extends Hardware {
                 shoulderSetpoint += .01 * ControllerMap.getInstance().secondController.getY(Hand.kLeft);
             }
             if (Math.abs(ControllerMap.getInstance().secondController.getY(Hand.kRight)) > .2) {
-                wristSetpoint += 27 * ControllerMap.getInstance().secondController.getY(Hand.kRight);
+                wristSetpoint += 45 * ControllerMap.getInstance().secondController.getY(Hand.kRight);
             }
         } else {
             moveShoulder(ControllerMap.getInstance().secondController.getY(Hand.kLeft));
