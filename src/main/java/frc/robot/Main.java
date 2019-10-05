@@ -5,6 +5,8 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+
+/* NR I added some comments to this file to test the Git-SVN integration */
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
