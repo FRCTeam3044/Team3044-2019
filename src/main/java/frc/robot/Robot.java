@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   UsbCamera intakeCam;
+  UsbCamera lineCam;
   // UsbCamera climberCam;
 
   /**
@@ -53,10 +54,15 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    intakeCam = CameraServer.getInstance().startAutomaticCapture("Driver Camera :)", 0);
+    /* intakeCam = CameraServer.getInstance().startAutomaticCapture("Driver Camera :)", 1);
     intakeCam.setPixelFormat(PixelFormat.kMJPEG);
     intakeCam.setResolution(160, 120);
-    intakeCam.setFPS(15);
+    intakeCam.setFPS(15); */
+
+    lineCam = CameraServer.getInstance().startAutomaticCapture("Line camera :)", 0);
+    lineCam.setPixelFormat(PixelFormat.kMJPEG);
+    lineCam.setResolution(160, 120);
+    lineCam.setFPS(15);
     // climberCam = CameraServer.getInstance().startAutomaticCapture(1);
 
   }
@@ -73,7 +79,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
 
-    SmartDashboard.putString("DB/String 0", ": " + ControllerMap.driverMode);
+    SmartDashboard.putString("DB/String 5", ": " + ControllerMap.driverMode);
     SmartDashboard.putString("DB/String 3",
         "pot value: " + String.valueOf(Intake.getInstance().potentiometer.getVoltage()));
     SmartDashboard.putString("DB/String 7", "Zero position: " + Intake.getInstance().getStartingWristEncoderValue());
@@ -130,6 +136,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     Intake.getInstance().releaseHatch();
+
+    //lineCam = CameraServer.getInstance().startAutomaticCapture("Line camera :)", 0);
+    //CameraServer.getInstance().removeCamera("Driver Camera :)");
+    //intakeCam.close();
   }
 
   /**

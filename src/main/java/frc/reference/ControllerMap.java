@@ -123,7 +123,7 @@ public class ControllerMap {
     }
 
     void climbMode() {
-        climb.moveClimbingArm(secondController.getY(Hand.kRight));
+        climb.moveClimbingArm(secondController.getY(Hand.kRight)); 
         climb.moveClimbingWheels(secondController.getY(Hand.kLeft));
 
         if (secondController.getTriggerAxis(Hand.kLeft) > .1) {
